@@ -670,21 +670,30 @@ Ejemplos reales Ladiar:
 
 El número en el nombre (24, 30, 21, 4DI x 10U, etc.) describe el contenido del pack pero NO se usa para dividir. Solo dividís por CANTIDAD.
 
+BOLETAS LOS HERMANOS / PAULINA (tienen columnas: Unidades | Kilos | Descuento | Unitario | Total):
+⚠️ CRÍTICO: Si el renglón tiene valor en la columna KILOS, SIEMPRE dividí por kilos. Ignorá la columna Unidades para el cálculo. La única excepción es el Salamín.
+
 FIAMBRES / EMBUTIDOS / QUESOS EN HORMA / PANCETA / BONDIOLA / PATEGRAS:
-Hay columna KILOS separada. precio_unitario_neto = TOTAL ÷ KILOS
-Ejemplo: Barra La Paulina, kilos=14.960, total=116038.14 → 116038.14 ÷ 14.960 = 7756.56
+precio_unitario_neto = TOTAL ÷ KILOS
+Ejemplos reales:
+  Barra La Paulina, kilos=14.960, total=116038.14 → 116038.14 ÷ 14.960 = 7756.56
+  Salchichón Bierzo Primavera, kilos=2.950, total=10727.79 → 10727.79 ÷ 2.950 = 3636.54
+  Pategras La Paulina, kilos=5.400, total=71829.40 → 71829.40 ÷ 5.400 = 13301.74
+  Panceta C/Cuero, kilos=1.525, total=21191.84 → 21191.84 ÷ 1.525 = 13896.29
+  Bondiola, kilos=1.100, total=19327.69 → 19327.69 ÷ 1.100 = 17570.63
 
-SALAMÍN (viene en tiras de 4 unidades):
+SALAMÍN (única excepción — viene en tiras de 4 unidades, NO dividir por kilos):
 precio_unitario_neto = TOTAL ÷ (Unidades_columna × 4)
-Ejemplo: Salamin, unidades=3, total=30003.30 → 30003.30 ÷ (3×4) = 30003.30 ÷ 12 = 2500.28
+Ejemplo: Salamin P.Fino Bierzo, unidades=3, total=30003.30 → 30003.30 ÷ (3×4) = 2500.28
 
-DULCE DE BATATA / MEMBRILLO / DULCE CON CHOCOLATE (cajas x5kg):
+DULCE DE BATATA / MEMBRILLO / DULCE CON CHOCOLATE (cajas x5kg, NO tienen kilos en la columna):
 precio_unitario_neto = TOTAL ÷ 5
-Ejemplo: Batata Cayfar x5kg, total=7821.70 → 7821.70 ÷ 5 = 1564.34
+Ejemplos: Batata Cayfar x5kg, total=7821.70 → 7821.70 ÷ 5 = 1564.34
+          Membrillo Cayfar x5kg, total=9562.50 → 9562.50 ÷ 5 = 1912.50
 
-QUESO CREMA "12 X 290G":
-precio_unitario_neto = TOTAL ÷ Unidades_columna ÷ 12
-Ejemplo: Queso Crema 12x290g, unidades=2, total=4856.36 → 4856.36 ÷ 2 ÷ 12 = 202.35
+QUESO CREMA (unidades individuales, columna Unidades indica cuántos hay):
+precio_unitario_neto = TOTAL ÷ Unidades_columna
+Ejemplo: Queso Crema L.P. Trad. 12x290g, unidades=2, total=4856.36 → 4856.36 ÷ 2 = 2428.18
 
 ═══════════════════════════════════════════════════════
 IGNORAR SIEMPRE
