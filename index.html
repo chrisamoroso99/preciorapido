@@ -348,7 +348,7 @@ select:focus, input:focus { border-color: var(--accent); }
       <div class="upload-title">Sacar o cargar foto</div>
       <div class="upload-sub">JPG · PNG · HEIC — se optimiza automáticamente</div>
     </div>
-    <input type="file" id="file-input" accept="image/*" capture="environment">
+    <input type="file" id="file-input" accept="image/*">
   </div>
 
   <!-- PROVEEDOR -->
@@ -658,9 +658,17 @@ precio_unitario_neto = TOTAL ÷ cant ÷ primer_número_del_nombre
 Ejemplos: "MONEDA JACK 60X5GR", cant=1, total=19195.31 → 19195.31 ÷ 60 = 319.92
           "PARAGUITAS 40X13GR", cant=1, total=21742.99 → 21742.99 ÷ 40 = 543.57
 
-ESPECIAS con columna CANTIDAD explícita (Ladiar style):
+LADIAR (boletas con columnas CODIGO | CANTIDAD | UN/DI | DESCRIPCION | PRECIO UNIT | % BONIFIC | PRECIO BONIF | SUBTOTAL | SUBTOTAL C/IVA):
+⚠️ CRÍTICO: Usá SIEMPRE la columna CANTIDAD para dividir. NUNCA uses los números que aparecen en el nombre del producto.
 precio_unitario_neto = SUBTOTAL_C_IVA ÷ CANTIDAD_columna
-Ejemplo: Pimienta Negra, cant_col=20, subtotal_c_iva=23599.40 → 23599.40 ÷ 20 = 1179.97
+
+Ejemplos reales Ladiar:
+  "CHOCO COFLER BLOCK LECHE/MANI 24 UN x 300gr", CANTIDAD=3, subtotal_c_iva=31090.72 → 31090.72 ÷ 3 = 10363.57
+  "CHOCOLATE ARCOR CELOFAN BLANCO 30 UN x 25gr", CANTIDAD=30, subtotal_c_iva=26651.13 → 26651.13 ÷ 30 = 888.37
+  "ALFAJOR MINITORTA DARK 21U x 69gr", CANTIDAD=6, subtotal_c_iva=7365.08 → 7365.08 ÷ 6 = 1227.51
+  "PIMIENTA NEGRA MOLIDA 4DI x 10U x 23gr", CANTIDAD=20, subtotal_c_iva=23599.40 → 23599.40 ÷ 20 = 1179.97
+
+El número en el nombre (24, 30, 21, 4DI x 10U, etc.) describe el contenido del pack pero NO se usa para dividir. Solo dividís por CANTIDAD.
 
 FIAMBRES / EMBUTIDOS / QUESOS EN HORMA / PANCETA / BONDIOLA / PATEGRAS:
 Hay columna KILOS separada. precio_unitario_neto = TOTAL ÷ KILOS
