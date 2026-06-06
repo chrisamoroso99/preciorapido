@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f0f0f">
+<title>PrecioRápido</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0f0f;
+  --surface: #181818;
+  --surface2: #222;
+  --surface3: #2a2a2a;
+  --border: #303030;
+  --accent: #f0c040;
+  --accent-dim: rgba(240,192,64,0.12);
+  --green: #4caf88;
+  --green-dim: rgba(76,175,136,0.15);
+  --red: #e05a2b;
+  --red-dim: rgba(224,90,43,0.12);
+  --text: #f0ece4;
+  --muted: #777;
+  --radius: 14px;
+  --radius-sm: 9px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* HEADER */
+header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(15,15,15,0.93);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 13px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px; letter-spacing: 3px;
+  color: var(--accent); line-height: 1;
+}
+.logo em { color: var(--text); font-style: normal; }
+.btn-nueva {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 500;
+  padding: 7px 12px; cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-nueva:active { border-color: var(--accent); color: var(--accent); }
+
+/* MAIN */
+main {
+  padding: 16px 14px 110px;
+  max-width: 560px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+/* CARD */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.card-label {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 12px;
+}
+
+/* UPLOAD */
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  min-height: 130px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative; overflow: hidden;
+  padding: 24px 16px;
+}
+.upload-zone:active { background: var(--surface2); border-color: var(--accent); }
+.upload-zone.has-image { border-style: solid; border-color: var(--accent); padding: 0; min-height: unset; }
+.upload-zone.has-image img { width: 100%; display: block; border-radius: 11px; max-height: 300px; object-fit: cover; }
+.upload-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.75));
+  padding: 28px 14px 12px;
+  font-size: 12px; color: var(--accent); font-weight: 600;
+}
+.upload-icon { font-size: 36px; }
+.upload-title { font-size: 15px; font-weight: 500; }
+.upload-sub { font-size: 12px; color: var(--muted); }
+#file-input { display: none; }
+
+/* INPUTS */
+select, input[type="text"], input[type="number"] {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; padding: 11px 13px;
+  width: 100%; outline: none;
+  -webkit-appearance: none; appearance: none;
+  transition: border-color 0.15s;
+}
+select:focus, input:focus { border-color: var(--accent); }
+
+/* PROVEEDOR */
+.provider-row { display: flex; gap: 8px; align-items: stretch; }
+.btn-add {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text); font-size: 22px;
+  width: 48px; min-width: 48px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.btn-add:active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+/* MARKUP */
+.markup-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.markup-label { font-size: 14px; color: var(--muted); white-space: nowrap; }
+.markup-field {
+  display: flex; align-items: center;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  flex: 1; overflow: hidden;
+  transition: border-color 0.15s;
+}
+.markup-field:focus-within { border-color: var(--accent); }
+.markup-field input {
+  border: none; border-radius: 0; background: none;
+  font-size: 22px; font-weight: 700;
+  text-align: right; padding: 10px 6px 10px 12px; width: 100%;
+}
+.markup-pct { font-size: 22px; font-weight: 700; color: var(--accent); padding: 0 13px 0 2px; }
+
+/* TOGGLES */
+.toggles { display: flex; gap: 8px; }
+.toggle {
+  flex: 1; background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600;
+  padding: 11px 8px; cursor: pointer;
+  transition: all 0.15s; text-align: center;
+}
+.toggle.on { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+/* BTN ANALIZAR */
+.btn-analyze {
+  width: 100%; background: var(--accent); color: #000;
+  border: none; border-radius: var(--radius);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px; letter-spacing: 3px;
+  padding: 17px; cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.btn-analyze:active { transform: scale(0.98); opacity: 0.85; }
+.btn-analyze:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+/* LOADING */
+.loading-card {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 14px; padding: 32px 16px;
+}
+.spinner {
+  width: 44px; height: 44px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-msg { font-size: 14px; color: var(--muted); text-align: center; line-height: 1.6; }
+
+/* ERROR */
+.error-card {
+  background: var(--red-dim); border: 1px solid var(--red);
+  border-radius: var(--radius); padding: 13px 16px;
+  font-size: 13px; color: var(--red); line-height: 1.5;
+}
+
+/* RESULTS */
+.results-top {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 14px;
+}
+.results-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; letter-spacing: 1.5px;
+}
+.results-count {
+  font-size: 12px; color: var(--muted);
+  background: var(--surface2); padding: 4px 10px;
+  border-radius: 20px; border: 1px solid var(--border);
+}
+.product-list { display: flex; flex-direction: column; gap: 8px; }
+
+/* PRODUCT ITEM */
+.p-item {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 12px 12px 14px;
+  display: flex; align-items: center; gap: 10px;
+  animation: fadeUp 0.25s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.p-info { flex: 1; min-width: 0; }
+.p-name {
+  font-size: 13px; font-weight: 500;
+  white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; margin-bottom: 3px;
+}
+.p-discount { font-size: 11px; color: var(--green); font-weight: 600; margin-bottom: 2px; }
+.p-base { font-size: 11px; color: var(--muted); }
+
+.p-price-col { text-align: right; flex-shrink: 0; }
+.p-price {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px; color: var(--accent);
+  letter-spacing: 1px; line-height: 1;
+}
+.p-unit { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+.p-actions { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
+.btn-sm {
+  background: none; border: 1px solid var(--border);
+  border-radius: 7px; color: var(--muted);
+  font-size: 13px; width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.12s;
+}
+.btn-sm:active { transform: scale(0.88); }
+.btn-sm.edit:active { background: var(--accent-dim); border-color: var(--accent); }
+.btn-sm.del:active  { background: var(--red-dim); border-color: var(--red); }
+.btn-sm.save { background: var(--accent); border-color: var(--accent); color: #000; }
+
+/* EDIT INPUTS */
+.p-name-edit {
+  font-size: 13px; font-weight: 500;
+  background: var(--surface3); border: 1px solid var(--accent);
+  border-radius: 6px; color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  padding: 5px 8px; width: 100%; margin-bottom: 5px; outline: none;
+}
+.p-price-edit {
+  font-family: 'Bebas Neue', sans-serif; font-size: 20px;
+  background: var(--surface3); border: 1px solid var(--accent);
+  border-radius: 6px; color: var(--accent);
+  text-align: right; padding: 4px 8px; width: 100%; outline: none;
+}
+
+/* WHATSAPP */
+.btn-wa {
+  width: 100%; background: #25D366; color: #fff;
+  border: none; border-radius: var(--radius);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px; letter-spacing: 3px;
+  padding: 17px; cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.btn-wa:active { opacity: 0.85; transform: scale(0.98); }
+
+/* MODAL */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex; align-items: flex-end; justify-content: center;
+  z-index: 200; animation: fadeO 0.18s ease;
+}
+@keyframes fadeO { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  padding: 28px 20px 40px;
+  width: 100%; max-width: 560px;
+  animation: slideU 0.22s ease;
+}
+@keyframes slideU { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 2px; margin-bottom: 16px;
+}
+.modal-row { display: flex; gap: 8px; margin-top: 16px; }
+.btn-cancel {
+  flex: 1; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--muted); font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600; padding: 13px; cursor: pointer;
+}
+.btn-confirm {
+  flex: 2; background: var(--accent); border: none;
+  border-radius: var(--radius-sm); color: #000;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 700; padding: 13px; cursor: pointer;
+}
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Precio<em>Rápido</em></div>
+  <button class="btn-nueva" onclick="resetApp()">🔄 Nueva boleta</button>
+</header>
+
+<main>
+
+  <!-- IMAGEN -->
+  <div class="card">
+    <div class="card-label">📄 Foto de la boleta</div>
+    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+      <div class="upload-icon">📷</div>
+      <div class="upload-title">Sacar o cargar foto</div>
+      <div class="upload-sub">JPG · PNG · HEIC — se optimiza automáticamente</div>
+    </div>
+    <input type="file" id="file-input" accept="image/*" capture="environment">
+  </div>
+
+  <!-- PROVEEDOR -->
+  <div class="card">
+    <div class="card-label">🏪 Proveedor</div>
+    <div class="provider-row">
+      <select id="provider-select">
+        <option value="">— Seleccioná un proveedor —</option>
+      </select>
+      <button class="btn-add" onclick="showAddProvider()" title="Agregar proveedor">＋</button>
+    </div>
+  </div>
+
+  <!-- CONFIG -->
+  <div class="card">
+    <div class="card-label">💰 Precios</div>
+    <div class="markup-row">
+      <span class="markup-label">Markup</span>
+      <div class="markup-field">
+        <input type="number" id="markup-input" value="40" min="0" max="999" inputmode="numeric">
+        <span class="markup-pct">%</span>
+      </div>
+    </div>
+    <div class="toggles">
+      <button class="toggle" id="toggle-iva" onclick="toggleTax('iva')">IVA 21%</button>
+      <button class="toggle" id="toggle-gan" onclick="toggleTax('gan')">Ganancias 5%</button>
+    </div>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-card hidden" id="error-box"></div>
+
+  <!-- BTN ANALIZAR -->
+  <button class="btn-analyze" id="btn-analyze" onclick="analyzeInvoice()" disabled>
+    🔍 ANALIZAR BOLETA
+  </button>
+
+  <!-- LOADING -->
+  <div class="card loading-card hidden" id="loading">
+    <div class="spinner"></div>
+    <div class="loading-msg">Claude está analizando la boleta…<br>Esto puede tardar unos segundos.</div>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div class="hidden" id="results-section">
+    <div class="card" style="margin-bottom:10px">
+      <div class="results-top">
+        <div class="results-title">Productos</div>
+        <div class="results-count" id="results-count">0 productos</div>
+      </div>
+      <div class="product-list" id="product-list"></div>
+    </div>
+    <button class="btn-wa" onclick="sendWhatsApp()">💬 ENVIAR POR WHATSAPP</button>
+  </div>
+
+</main>
+
+<!-- MODAL PROVEEDOR -->
+<div class="modal-overlay hidden" id="modal-provider" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-title">Nuevo Proveedor</div>
+    <input type="text" id="new-provider-input" placeholder="Ej: Coca Cola, BAI, La Serenísima…">
+    <div class="modal-row">
+      <button class="btn-cancel" onclick="hideModal('modal-provider')">Cancelar</button>
+      <button class="btn-confirm" onclick="addProvider()">Agregar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════
+let imageBase64 = null;
+let products = [];
+let ivaOn = false;
+let ganOn = false;
+
+// ══════════════════════════════════════════════════
+// PROVIDERS
+// ══════════════════════════════════════════════════
+const DEFAULT_PROVIDERS = ['Coca Cola', 'BAI', 'La Serenísima', 'Arcor', 'Molinos', 'Quilmes', 'Ladiar', 'Jumael', 'Los Hermanos'];
+
+function loadProviders() {
+  const raw = localStorage.getItem('providers');
+  const list = raw ? JSON.parse(raw) : DEFAULT_PROVIDERS;
+  const sel = document.getElementById('provider-select');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">— Seleccioná un proveedor —</option>';
+  list.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p; o.textContent = p;
+    sel.appendChild(o);
+  });
+  if (current) sel.value = current;
+}
+
+function saveProviders(list) { localStorage.setItem('providers', JSON.stringify(list)); }
+
+function showAddProvider() {
+  document.getElementById('new-provider-input').value = '';
+  document.getElementById('modal-provider').classList.remove('hidden');
+  setTimeout(() => document.getElementById('new-provider-input').focus(), 120);
+}
+
+function addProvider() {
+  const val = document.getElementById('new-provider-input').value.trim();
+  if (!val) return;
+  const raw = localStorage.getItem('providers');
+  const list = raw ? JSON.parse(raw) : [...DEFAULT_PROVIDERS];
+  if (!list.includes(val)) { list.push(val); saveProviders(list); }
+  loadProviders();
+  document.getElementById('provider-select').value = val;
+  hideModal('modal-provider');
+  checkReady();
+}
+
+function hideModal(id) { document.getElementById(id).classList.add('hidden'); }
+function handleOverlayClick(e) { if (e.target === e.currentTarget) hideModal('modal-provider'); }
+
+// ══════════════════════════════════════════════════
+// IMAGE
+// ══════════════════════════════════════════════════
+document.getElementById('file-input').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  clearError();
+  try {
+    imageBase64 = await compressImage(file);
+    const zone = document.getElementById('upload-zone');
+    zone.classList.add('has-image');
+    zone.innerHTML = `
+      <img src="data:image/jpeg;base64,${imageBase64}" alt="Boleta">
+      <div class="upload-overlay">📷 Tocá para cambiar la foto</div>`;
+    zone.onclick = () => document.getElementById('file-input').click();
+    checkReady();
+  } catch(err) {
+    showError('No se pudo procesar la imagen. Intentá con otra foto.');
+  }
+  e.target.value = '';
+});
+
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const MAX = 1800;
+        let w = img.width, h = img.height;
+        if (w > MAX || h > MAX) {
+          const r = Math.min(MAX/w, MAX/h);
+          w = Math.round(w * r); h = Math.round(h * r);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        let q = 0.88;
+        let b64 = canvas.toDataURL('image/jpeg', q).split(',')[1];
+        while (b64.length > 4.5 * 1024 * 1024 && q > 0.25) {
+          q -= 0.08;
+          b64 = canvas.toDataURL('image/jpeg', q).split(',')[1];
+        }
+        resolve(b64);
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// READY CHECK
+// ══════════════════════════════════════════════════
+function checkReady() {
+  const ok = !!imageBase64 && !!document.getElementById('provider-select').value;
+  document.getElementById('btn-analyze').disabled = !ok;
+}
+document.getElementById('provider-select').addEventListener('change', checkReady);
+
+// ══════════════════════════════════════════════════
+// TAX TOGGLES
+// ══════════════════════════════════════════════════
+function toggleTax(type) {
+  if (type === 'iva') {
+    ivaOn = !ivaOn;
+    document.getElementById('toggle-iva').classList.toggle('on', ivaOn);
+  } else {
+    ganOn = !ganOn;
+    document.getElementById('toggle-gan').classList.toggle('on', ganOn);
+  }
+  if (products.length) renderProducts();
+}
+
+// ══════════════════════════════════════════════════
+// PRICE LOGIC
+// ══════════════════════════════════════════════════
+function calcFinalPrice(precioUnitarioNeto) {
+  const markup = parseFloat(document.getElementById('markup-input').value) || 40;
+  let p = precioUnitarioNeto * (1 + markup / 100);
+  if (ivaOn) p *= 1.21;
+  if (ganOn) p *= 1.05;
+  return roundToHundred(p);
+}
+
+function roundToHundred(price) {
+  const base = Math.floor(price / 100) * 100;
+  const rem  = price - base;
+  return rem <= 30 ? base : base + 100;
+}
+
+function fmt(n) {
+  return '$' + Math.round(n).toLocaleString('es-AR');
+}
+
+// ══════════════════════════════════════════════════
+// PROMPT
+// ══════════════════════════════════════════════════
+const PROMPT = `Sos un experto en leer facturas y boletas de proveedores de almacenes y supermercados de Argentina.
+
+Tu tarea es extraer todos los PRODUCTOS FÍSICOS VENDIBLES de esta boleta, calculando el PRECIO UNITARIO NETO que el almacén pagó por cada unidad vendible.
+
+═══════════════════════════════════════════
+REGLA FUNDAMENTAL
+═══════════════════════════════════════════
+El "precio_unitario_neto" es lo que el almacén pagó por UNA SOLA UNIDAD vendible en góndola.
+Para calcularlo necesitás: TOTAL DEL RENGLÓN ÷ CANTIDAD TOTAL DE UNIDADES VENDIBLES.
+
+═══════════════════════════════════════════
+COLUMNA DE PRECIO (TOTAL DEL RENGLÓN)
+═══════════════════════════════════════════
+Siempre usá la ÚLTIMA columna numérica positiva del renglón del producto.
+Según la boleta se llama: "Importe", "Total", "Subtotal C/IVA", etc.
+NUNCA uses el total general de la boleta (el que suma todo al final).
+
+═══════════════════════════════════════════
+CÓMO CALCULAR LAS UNIDADES VENDIBLES
+═══════════════════════════════════════════
+Este es el paso más importante. Analizá el contexto de cada producto:
+
+CASO 1 — BEBIDAS CON MULTIPLICADOR EN EL NOMBRE (vendidas por unidad):
+El nombre indica unidades por pack: "X9", "X24", "X6", "X8", "4X6", "NR 4X6", etc.
+- "X9" = 9 unidades por cajón
+- "X24" = 24 unidades por cajón  
+- "4X6" o "NR 4X6" = 4×6 = 24 unidades por pack
+- Columna CANT o UND = cantidad de cajones/packs comprados
+- precio_unitario_neto = Total ÷ cant_cajones ÷ unidades_por_cajón
+Ejemplos reales:
+  "COCA-COLA ZERO RP 2L X9", cant=1, total=32250 → 32250 ÷ 1 ÷ 9 = 3583.33
+  "HEINEKEN LATA 473CC NR 4X6", cant=10, total=23538.70 → 23538.70 ÷ 10 ÷ 24 = 98.08... 
+  ESPERA: si el total ya contempla el pack completo y la cantidad es de packs, dividís solo por cantidad:
+  "HEINEKEN LATA 473CC NR 4X6", cant=10 packs, total=23538.70 → 23538.70 ÷ 10 = 2353.87 por pack de 24
+  ATENCIÓN: en BAI el total ya incluye todos los packs, así que precio_unitario_neto = Total ÷ cantidad_columna
+
+CASO 2 — GOLOSINAS/SNACKS CON MULTIPLICADOR EN EL NOMBRE (vendidas por unidad):
+El nombre indica unidades por caja: "60X5GR", "20X26GR", "30X16GR", "40X13GR"
+El primer número es la cantidad de unidades individuales.
+- "60X5GR" = 60 unidades de 5gr
+- "20X26GR" = 20 unidades de 26gr
+La columna CANT suele ser 1 (una caja).
+precio_unitario_neto = Total ÷ cant ÷ primer_número_del_nombre
+Ejemplos reales:
+  "MONEDA JACK 60X5GR", cant=1, total=19195.31 → 19195.31 ÷ 1 ÷ 60 = 319.92
+  "PARAGUITAS 40X13GR", cant=1, total=21742.99 → 21742.99 ÷ 1 ÷ 40 = 543.57
+
+CASO 3 — ESPECIAS/PRODUCTOS CON DISPLAYS (vendidas por unidad individual):
+Nombres como "4DI x 10U x 23GR" = 4 displays × 10 unidades = 40 unidades por caja.
+PERO si la columna CANTIDAD dice 20, significa que compraron 20 unidades individuales.
+En este caso: precio_unitario_neto = Total ÷ CANTIDAD_COLUMNA (no dividir por el multiplicador del nombre)
+Ejemplo real (Ladiar):
+  "PIMIENTA NEGRA 4DI x 10U x 23GR", cant_columna=20, subtotal_c_iva=23599.40 → 23599.40 ÷ 20 = 1179.97
+
+CASO 4 — PRODUCTOS POR KILO (fiambres, embutidos, quesos en horma, panceta, bondiola, pategras):
+Hay columna de KILOS separada de UNIDADES. El precio es por kilo.
+precio_unitario_neto = Total ÷ Kilos
+Ejemplos reales:
+  "BARRA LA PAULINA", kilos=14.960, total=116038.14 → 116038.14 ÷ 14.960 = 7756.56
+  "PANCETA C/CUERO", kilos=1.525, total=21191.84 → 21191.84 ÷ 1.525 = 13896.29... usá el Unitario de la boleta si está disponible
+
+CASO 5 — SALAMÍN (vendido por unidad, viene en tiras de 4):
+El nombre dice "SALAMIN" y la columna Unidades indica tiras.
+Cada tira tiene 4 unidades de salamín.
+precio_unitario_neto = Total ÷ (Unidades_columna × 4)
+Ejemplo real:
+  "SALCHICHON BIERZO PRIMAVERA", unidades=1, total=10727.79 → precio por unidad = 10727.79 ÷ (1×4) = 2681.95
+  (Si dice SALAMIN y unidades=3 → 3×4=12 unidades → Total ÷ 12)
+
+CASO 6 — DULCE DE BATATA / MEMBRILLO / DULCE CON CHOCOLATE (cajas de 5kg):
+Vienen en cajas de 5kg. precio_unitario_neto = Total ÷ 5
+Ejemplo real:
+  "BATATA CAYFAR C/C CAJON X 5KG", total=7821.70 → 7821.70 ÷ 5 = 1564.34
+
+CASO 7 — QUESO CREMA (cajas con unidades individuales tipo "12 X 290G"):
+precio_unitario_neto = Total ÷ Unidades_columna ÷ 12
+Ejemplo real:
+  "QUESO CREMA L.P. TRAD. 12X290G", unidades=2, total=4856.36 → 4856.36 ÷ 2 ÷ 12 = 202.35
+
+CASO 8 — DESCUENTOS COMO LÍNEA SEPARADA CON VALOR NEGATIVO (Coca Cola style):
+Líneas con nombres como "ZA RP = 37.2%", "DTO.", "BONIF" con importe NEGATIVO.
+Asocialas al/los producto/s anteriores por nombre o proximidad.
+Distribuí el descuento proporcionalmente si aplica a varios productos.
+precio_unitario_neto = (Importe_producto - descuento_proporcional) ÷ unidades
+
+CASO 9 — DESCUENTOS COMO LÍNEAS DUPLICADAS CON DTO 99.99% (BAI style):
+Cada producto aparece DOS veces: la real y una con DTO 99.99% y subtotal de centavos.
+La segunda línea representa unidades BONIFICADAS (gratis).
+precio_unitario_neto = Subtotal_línea_real ÷ (UND_línea1 + UND_línea2)
+Ejemplo real (BAI):
+  Línea 1: SCHNEIDER LATA X473, UND=17, subtotal=$24011.40
+  Línea 2: SCHNEIDER LATA X473, UND=7, DTO=99.99%, subtotal=$0.99
+  → precio_unitario_neto = 24011.40 ÷ (17+7) = 24011.40 ÷ 24 = 1000.47
+
+CASO 10 — DESCUENTO COMO PORCENTAJE EN COLUMNA "OFERTA TRANSITORIA" / "BONIF" / "% BONIFIC":
+El descuento ya está aplicado en el Subtotal/Total del renglón. Usá ese total directamente.
+Si hay columna "PRECIO BONIF" o "SUBTOTAL" ya descontado, usá esa columna como base.
+
+═══════════════════════════════════════════
+IGNORAR SIEMPRE
+═══════════════════════════════════════════
+- Servicios Administrativos, Flete, Percepción IVA, Percepción IIBB
+- Subtotales, totales generales, encabezados de grupo
+- Líneas con DTO 99.99% (son las bonificadas, ya las sumaste a las reales)
+- Cualquier cosa que no sea un producto físico vendible en góndola
+
+═══════════════════════════════════════════
+NOMBRES
+═══════════════════════════════════════════
+Limpiá los nombres para que sean legibles por personas no técnicas.
+Quitá códigos de material, abreviaturas innecesarias.
+Ejemplos: "COCA-COLA ZERO RP 2L X9" → "Coca Zero RP 2L x9"
+          "ESPECIAS PIMIENTA NEGRA MOLIDA LC 4DI x10U x23" → "Pimienta Negra Molida x23gr"
+          "BARRA LA PAULINA" → "Barra La Paulina (por kg)"
+          "SALCHICHON BIERZO PRIMAVERA" → "Salchichón Bierzo Primavera (por unidad)"
+
+═══════════════════════════════════════════
+RESPUESTA
+═══════════════════════════════════════════
+Respondé ÚNICAMENTE con JSON válido. Sin texto, sin markdown, sin explicaciones previas ni posteriores.
+
+{
+  "productos": [
+    {
+      "nombre": "Nombre limpio del producto",
+      "precio_unitario_neto": 1234.56,
+      "descuento_detalle": "ZA RP 37.2% proporcional" 
+    }
+  ]
+}
+
+"descuento_detalle" solo si hubo descuento, sino "".
+"precio_unitario_neto" redondeado a 2 decimales.
+Si no podés determinar el precio con certeza, igualmente incluí el producto con tu mejor estimación y aclaralo en "descuento_detalle".`;
+
+// ══════════════════════════════════════════════════
+// ANALYZE
+// ══════════════════════════════════════════════════
+async function analyzeInvoice() {
+  clearError();
+  document.getElementById('loading').classList.remove('hidden');
+  document.getElementById('btn-analyze').disabled = true;
+  document.getElementById('results-section').classList.add('hidden');
+
+  try {
+    const res = await fetch('/.netlify/functions/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        image: imageBase64,
+        mediaType: 'image/jpeg',
+        prompt: PROMPT
+      })
+    });
+
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      throw new Error(e.error || `Error del servidor (${res.status})`);
+    }
+
+    const data = await res.json();
+    let parsed;
+    try {
+      const clean = data.result.replace(/```json|```/gi, '').trim();
+      parsed = JSON.parse(clean);
+    } catch {
+      throw new Error('Claude no pudo leer la boleta. Intentá con una foto más nítida y bien encuadrada.');
+    }
+
+    if (!parsed.productos?.length) {
+      throw new Error('No se detectaron productos. Asegurate que la foto sea clara y muestre los renglones de productos.');
+    }
+
+    products = parsed.productos.map((p, i) => ({
+      id: i,
+      nombre: p.nombre || `Producto ${i+1}`,
+      precio_unitario_neto: parseFloat(p.precio_unitario_neto) || 0,
+      descuento_detalle: p.descuento_detalle || '',
+      editing: false
+    }));
+
+    renderProducts();
+    document.getElementById('results-section').classList.remove('hidden');
+    document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch (err) {
+    showError('⚠️ ' + err.message);
+  } finally {
+    document.getElementById('loading').classList.add('hidden');
+    checkReady();
+  }
+}
+
+// ══════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════
+function renderProducts() {
+  const list = document.getElementById('product-list');
+  document.getElementById('results-count').textContent =
+    `${products.length} producto${products.length !== 1 ? 's' : ''}`;
+  list.innerHTML = '';
+
+  products.forEach((p, idx) => {
+    const finalPrice = calcFinalPrice(p.precio_unitario_neto);
+    const div = document.createElement('div');
+    div.className = 'p-item';
+    div.style.animationDelay = `${idx * 35}ms`;
+
+    if (p.editing) {
+      div.innerHTML = `
+        <div class="p-info" style="flex:1">
+          <input class="p-name-edit" id="en-${p.id}" value="${esc(p.nombre)}">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Precio unitario neto (base para el markup)</div>
+          <input class="p-price-edit" id="ep-${p.id}" type="number" value="${p.precio_unitario_neto}" inputmode="decimal" style="width:100%">
+        </div>
+        <div class="p-actions">
+          <button class="btn-sm save" onclick="saveEdit(${p.id})">✓</button>
+        </div>`;
+    } else {
+      div.innerHTML = `
+        <div class="p-info">
+          <div class="p-name">${esc(p.nombre)}</div>
+          ${p.descuento_detalle ? `<div class="p-discount">🏷 ${esc(p.descuento_detalle)}</div>` : ''}
+          <div class="p-base">Neto: ${fmt(p.precio_unitario_neto)}</div>
+        </div>
+        <div class="p-price-col">
+          <div class="p-price">${fmt(finalPrice)}</div>
+          <div class="p-unit">por unidad</div>
+        </div>
+        <div class="p-actions">
+          <button class="btn-sm edit" onclick="startEdit(${p.id})" title="Editar">✏️</button>
+          <button class="btn-sm del"  onclick="delProduct(${p.id})" title="Eliminar">🗑</button>
+        </div>`;
+    }
+    list.appendChild(div);
+  });
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function startEdit(id) {
+  products = products.map(p => ({ ...p, editing: p.id === id }));
+  renderProducts();
+  setTimeout(() => document.getElementById(`en-${id}`)?.focus(), 60);
+}
+
+function saveEdit(id) {
+  const newName = document.getElementById(`en-${id}`)?.value.trim();
+  const newNeto = parseFloat(document.getElementById(`ep-${id}`)?.value) || 0;
+  products = products.map(p => p.id !== id ? p : {
+    ...p, nombre: newName || p.nombre,
+    precio_unitario_neto: newNeto, editing: false
+  });
+  renderProducts();
+}
+
+function delProduct(id) {
+  products = products.filter(p => p.id !== id);
+  renderProducts();
+  if (!products.length) document.getElementById('results-section').classList.add('hidden');
+}
+
+// ══════════════════════════════════════════════════
+// WHATSAPP
+// ══════════════════════════════════════════════════
+function sendWhatsApp() {
+  const provider = document.getElementById('provider-select').value || 'el proveedor';
+  let msg = `Hola, estos son los nuevos precios de *${provider}*:\n\n`;
+  products.forEach(p => {
+    msg += `• ${p.nombre}: ${fmt(calcFinalPrice(p.precio_unitario_neto))}\n`;
+  });
+  msg += `\nYa sabe, si lo tenemos más caro, no bajen el precio 😉`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// ══════════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════════
+function showError(msg) {
+  const b = document.getElementById('error-box');
+  b.textContent = msg; b.classList.remove('hidden');
+  b.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function clearError() { document.getElementById('error-box').classList.add('hidden'); }
+
+function resetApp() {
+  imageBase64 = null; products = [];
+  const zone = document.getElementById('upload-zone');
+  zone.classList.remove('has-image');
+  zone.innerHTML = `
+    <div class="upload-icon">📷</div>
+    <div class="upload-title">Sacar o cargar foto</div>
+    <div class="upload-sub">JPG · PNG · HEIC — se optimiza automáticamente</div>`;
+  zone.onclick = () => document.getElementById('file-input').click();
+  document.getElementById('results-section').classList.add('hidden');
+  document.getElementById('btn-analyze').disabled = true;
+  clearError();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('markup-input').addEventListener('input', () => {
+  if (products.length) renderProducts();
+});
+
+document.getElementById('new-provider-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addProvider();
+});
+
+loadProviders();
+</script>
+</body>
+</html>
