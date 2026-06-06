@@ -571,131 +571,142 @@ function fmt(n) {
 // ══════════════════════════════════════════════════
 const PROMPT = `Sos un experto en leer facturas y boletas de proveedores de almacenes y supermercados de Argentina.
 
-Tu tarea es extraer todos los PRODUCTOS FÍSICOS VENDIBLES de esta boleta, calculando el PRECIO UNITARIO NETO que el almacén pagó por cada unidad vendible.
+Tu tarea es extraer todos los PRODUCTOS FÍSICOS VENDIBLES de esta boleta, calculando el PRECIO UNITARIO NETO que el almacén pagó por cada unidad vendible en góndola.
 
-═══════════════════════════════════════════
-REGLA FUNDAMENTAL
-═══════════════════════════════════════════
-El "precio_unitario_neto" es lo que el almacén pagó por UNA SOLA UNIDAD vendible en góndola.
-Para calcularlo necesitás: TOTAL DEL RENGLÓN ÷ CANTIDAD TOTAL DE UNIDADES VENDIBLES.
+═══════════════════════════════════════════════════════
+PASO 1 — IDENTIFICAR LA COLUMNA DE PRECIO DEL RENGLÓN
+═══════════════════════════════════════════════════════
+CRÍTICO: Usá SIEMPRE la ÚLTIMA columna numérica de cada renglón de producto. Esa columna representa el importe total que se paga por ese renglón completo.
 
-═══════════════════════════════════════════
-COLUMNA DE PRECIO (TOTAL DEL RENGLÓN)
-═══════════════════════════════════════════
-Siempre usá la ÚLTIMA columna numérica positiva del renglón del producto.
-Según la boleta se llama: "Importe", "Total", "Subtotal C/IVA", etc.
-NUNCA uses el total general de la boleta (el que suma todo al final).
+Nombres comunes de esa columna según el proveedor:
+- "IMPORTE" (Coca Cola / Yamanil)
+- "TOTAL" (BAI, Quilmes, Brahma)
+- "SUBTOTAL C/IVA" (Ladiar)
+- La última columna con número grande positivo
 
-═══════════════════════════════════════════
-CÓMO CALCULAR LAS UNIDADES VENDIBLES
-═══════════════════════════════════════════
-Este es el paso más importante. Analizá el contexto de cada producto:
+⚠️ NUNCA uses la columna "NETO" ni "IVA" ni "I.INTERNOS" ni ninguna columna intermedia.
+⚠️ NUNCA uses el total general de toda la boleta (el que aparece al final sumando todo).
 
-CASO 1 — BEBIDAS CON MULTIPLICADOR EN EL NOMBRE (vendidas por unidad):
-El nombre indica unidades por pack: "X9", "X24", "X6", "X8", "4X6", "NR 4X6", etc.
-- "X9" = 9 unidades por cajón
-- "X24" = 24 unidades por cajón  
-- "4X6" o "NR 4X6" = 4×6 = 24 unidades por pack
-- Columna CANT o UND = cantidad de cajones/packs comprados
-- precio_unitario_neto = Total ÷ cant_cajones ÷ unidades_por_cajón
-Ejemplos reales:
-  "COCA-COLA ZERO RP 2L X9", cant=1, total=32250 → 32250 ÷ 1 ÷ 9 = 3583.33
-  "HEINEKEN LATA 473CC NR 4X6", cant=10, total=23538.70 → 23538.70 ÷ 10 ÷ 24 = 98.08... 
-  ESPERA: si el total ya contempla el pack completo y la cantidad es de packs, dividís solo por cantidad:
-  "HEINEKEN LATA 473CC NR 4X6", cant=10 packs, total=23538.70 → 23538.70 ÷ 10 = 2353.87 por pack de 24
-  ATENCIÓN: en BAI el total ya incluye todos los packs, así que precio_unitario_neto = Total ÷ cantidad_columna
+Ejemplo con boleta Coca Cola (columnas: Cant | Código | Producto | CE | Neto | IVA | I.Internos | IMPORTE):
+- "RP2LX9 COMB": Neto=25223.31, IVA=5296.90, I.Internos=1729.79, IMPORTE=32250.00 → USAR 32250.00 ✓
+- "COCA-COLA ZERO RP 2L X9" cant=2: Neto=50446.62, IMPORTE=64500.00 → USAR 64500.00 ✓
 
-CASO 2 — GOLOSINAS/SNACKS CON MULTIPLICADOR EN EL NOMBRE (vendidas por unidad):
-El nombre indica unidades por caja: "60X5GR", "20X26GR", "30X16GR", "40X13GR"
-El primer número es la cantidad de unidades individuales.
-- "60X5GR" = 60 unidades de 5gr
-- "20X26GR" = 20 unidades de 26gr
-La columna CANT suele ser 1 (una caja).
-precio_unitario_neto = Total ÷ cant ÷ primer_número_del_nombre
-Ejemplos reales:
-  "MONEDA JACK 60X5GR", cant=1, total=19195.31 → 19195.31 ÷ 1 ÷ 60 = 319.92
-  "PARAGUITAS 40X13GR", cant=1, total=21742.99 → 21742.99 ÷ 1 ÷ 40 = 543.57
+═══════════════════════════════════════════════════════
+PASO 2 — CALCULAR DESCUENTOS (si los hay)
+═══════════════════════════════════════════════════════
+Los descuentos pueden aparecer de varias formas:
 
-CASO 3 — ESPECIAS/PRODUCTOS CON DISPLAYS (vendidas por unidad individual):
-Nombres como "4DI x 10U x 23GR" = 4 displays × 10 unidades = 40 unidades por caja.
-PERO si la columna CANTIDAD dice 20, significa que compraron 20 unidades individuales.
-En este caso: precio_unitario_neto = Total ÷ CANTIDAD_COLUMNA (no dividir por el multiplicador del nombre)
-Ejemplo real (Ladiar):
-  "PIMIENTA NEGRA 4DI x 10U x 23GR", cant_columna=20, subtotal_c_iva=23599.40 → 23599.40 ÷ 20 = 1179.97
+FORMA A — Línea separada con IMPORTE NEGATIVO (Coca Cola / Yamanil style):
+Líneas como "ZA RP = 37.2% Trasl $3200" o "ZA 1.75 CCSO = 36.1%" con IMPORTE negativo.
+- Identificá a qué productos aplica (por nombre o proximidad en la lista)
+- Si aplica a VARIOS productos: distribuí el descuento proporcionalmente según el IMPORTE de cada uno
+- Importe neto del renglón = IMPORTE del producto - descuento proporcional
 
-CASO 4 — PRODUCTOS POR KILO (fiambres, embutidos, quesos en horma, panceta, bondiola, pategras):
-Hay columna de KILOS separada de UNIDADES. El precio es por kilo.
-precio_unitario_neto = Total ÷ Kilos
-Ejemplos reales:
-  "BARRA LA PAULINA", kilos=14.960, total=116038.14 → 116038.14 ÷ 14.960 = 7756.56
-  "PANCETA C/CUERO", kilos=1.525, total=21191.84 → 21191.84 ÷ 1.525 = 13896.29... usá el Unitario de la boleta si está disponible
+Ejemplo REAL (Coca Cola):
+  Producto 1: RP2LX9 COMB, cant=1, IMPORTE=32250
+  Producto 2: COCA-COLA ZERO RP 2L X9, cant=2, IMPORTE=64500
+  Producto 3: COCA-COLA PR 2LX9, cant=1, IMPORTE=32250
+  Descuento: ZA RP = 37.2%, IMPORTE=-45414.07 (aplica a los 3 productos RP)
+  
+  Total IMPORTE de los 3 productos = 32250 + 64500 + 32250 = 129000
+  Descuento proporcional producto 1 = 45414.07 × (32250/129000) = 11353.52
+  Descuento proporcional producto 2 = 45414.07 × (64500/129000) = 22707.04
+  Descuento proporcional producto 3 = 45414.07 × (32250/129000) = 11353.52
+  
+  IMPORTE neto producto 1 = 32250 - 11353.52 = 20896.48
+  IMPORTE neto producto 2 = 64500 - 22707.04 = 41792.96
+  IMPORTE neto producto 3 = 32250 - 11353.52 = 20896.48
 
-CASO 5 — SALAMÍN (vendido por unidad, viene en tiras de 4):
-El nombre dice "SALAMIN" y la columna Unidades indica tiras.
-Cada tira tiene 4 unidades de salamín.
-precio_unitario_neto = Total ÷ (Unidades_columna × 4)
-Ejemplo real:
-  "SALCHICHON BIERZO PRIMAVERA", unidades=1, total=10727.79 → precio por unidad = 10727.79 ÷ (1×4) = 2681.95
-  (Si dice SALAMIN y unidades=3 → 3×4=12 unidades → Total ÷ 12)
+FORMA B — Líneas duplicadas con DTO 99.99% (BAI style):
+Cada producto aparece DOS veces. La segunda línea tiene DTO=99.99% y subtotal de centavos.
+Son unidades BONIFICADAS (gratis). No son un descuento de precio, son unidades extra.
+precio_unitario_neto = TOTAL_línea_real ÷ (UND_línea1 + UND_línea2)
+Ejemplo: Schneider UND=17 total=$24011 + Schneider UND=7 DTO=99.99% total=$0.99
+→ precio_unitario_neto = 24011 ÷ (17+7) = 24011 ÷ 24 = 1000.47
 
-CASO 6 — DULCE DE BATATA / MEMBRILLO / DULCE CON CHOCOLATE (cajas de 5kg):
-Vienen en cajas de 5kg. precio_unitario_neto = Total ÷ 5
-Ejemplo real:
-  "BATATA CAYFAR C/C CAJON X 5KG", total=7821.70 → 7821.70 ÷ 5 = 1564.34
+FORMA C — Porcentaje en columna "OFERTA TRANSITORIA", "BONIF", "% BONIFIC":
+El descuento YA está aplicado en el Total/Subtotal del renglón. Usá ese total directamente.
 
-CASO 7 — QUESO CREMA (cajas con unidades individuales tipo "12 X 290G"):
-precio_unitario_neto = Total ÷ Unidades_columna ÷ 12
-Ejemplo real:
-  "QUESO CREMA L.P. TRAD. 12X290G", unidades=2, total=4856.36 → 4856.36 ÷ 2 ÷ 12 = 202.35
+═══════════════════════════════════════════════════════
+PASO 3 — CALCULAR PRECIO UNITARIO
+═══════════════════════════════════════════════════════
+Con el IMPORTE neto del renglón (después de descontar si corresponde), calculá el precio por unidad vendible:
 
-CASO 8 — DESCUENTOS COMO LÍNEA SEPARADA CON VALOR NEGATIVO (Coca Cola style):
-Líneas con nombres como "ZA RP = 37.2%", "DTO.", "BONIF" con importe NEGATIVO.
-Asocialas al/los producto/s anteriores por nombre o proximidad.
-Distribuí el descuento proporcionalmente si aplica a varios productos.
-precio_unitario_neto = (Importe_producto - descuento_proporcional) ÷ unidades
+BEBIDAS con multiplicador en el nombre → SIEMPRE se venden por unidad individual:
+El número después de la X indica unidades por cajón/pack.
+"X9" = 9 unidades, "X8" = 8 unidades, "X6" = 6 unidades, "X24" = 24 unidades
+"4X6" o "NR 4X6" = 4×6 = 24 unidades
+"4X6 473CC" = pack de 4 grupos de 6 latas = 24 latas
 
-CASO 9 — DESCUENTOS COMO LÍNEAS DUPLICADAS CON DTO 99.99% (BAI style):
-Cada producto aparece DOS veces: la real y una con DTO 99.99% y subtotal de centavos.
-La segunda línea representa unidades BONIFICADAS (gratis).
-precio_unitario_neto = Subtotal_línea_real ÷ (UND_línea1 + UND_línea2)
-Ejemplo real (BAI):
-  Línea 1: SCHNEIDER LATA X473, UND=17, subtotal=$24011.40
-  Línea 2: SCHNEIDER LATA X473, UND=7, DTO=99.99%, subtotal=$0.99
-  → precio_unitario_neto = 24011.40 ÷ (17+7) = 24011.40 ÷ 24 = 1000.47
+precio_unitario_neto = IMPORTE_neto_renglón ÷ CANT ÷ unidades_por_cajón
 
-CASO 10 — DESCUENTO COMO PORCENTAJE EN COLUMNA "OFERTA TRANSITORIA" / "BONIF" / "% BONIFIC":
-El descuento ya está aplicado en el Subtotal/Total del renglón. Usá ese total directamente.
-Si hay columna "PRECIO BONIF" o "SUBTOTAL" ya descontado, usá esa columna como base.
+⚠️ CRÍTICO — Ejemplo COMPLETO Coca Cola:
+  Producto 1: RP2LX9 COMB, cant=1, IMPORTE=32250, descuento_prop=11353.52
+    IMPORTE_neto = 32250 - 11353.52 = 20896.48
+    precio_unitario_neto = 20896.48 ÷ 1 ÷ 9 = 2321.83  ← dividir por CANT y por X9
+    
+  Producto 2: COCA-COLA ZERO RP 2L X9, cant=2, IMPORTE=64500, descuento_prop=22707.04
+    IMPORTE_neto = 64500 - 22707.04 = 41792.96
+    precio_unitario_neto = 41792.96 ÷ 2 ÷ 9 = 2321.83  ← dividir por CANT=2 y por X9
+    
+  Producto 3: CC PET 1.75X8, cant=1, IMPORTE=33333.34, descuento=-11387.90
+    IMPORTE_neto = 33333.34 - 11387.90 = 21945.44
+    precio_unitario_neto = 21945.44 ÷ 1 ÷ 8 = 2743.18  ← dividir por X8
 
-═══════════════════════════════════════════
+GOLOSINAS con "60X5GR", "20X26GR", "40X13GR" etc → vendidas por unidad individual:
+precio_unitario_neto = TOTAL ÷ cant ÷ primer_número_del_nombre
+Ejemplos: "MONEDA JACK 60X5GR", cant=1, total=19195.31 → 19195.31 ÷ 60 = 319.92
+          "PARAGUITAS 40X13GR", cant=1, total=21742.99 → 21742.99 ÷ 40 = 543.57
+
+ESPECIAS con columna CANTIDAD explícita (Ladiar style):
+precio_unitario_neto = SUBTOTAL_C_IVA ÷ CANTIDAD_columna
+Ejemplo: Pimienta Negra, cant_col=20, subtotal_c_iva=23599.40 → 23599.40 ÷ 20 = 1179.97
+
+FIAMBRES / EMBUTIDOS / QUESOS EN HORMA / PANCETA / BONDIOLA / PATEGRAS:
+Hay columna KILOS separada. precio_unitario_neto = TOTAL ÷ KILOS
+Ejemplo: Barra La Paulina, kilos=14.960, total=116038.14 → 116038.14 ÷ 14.960 = 7756.56
+
+SALAMÍN (viene en tiras de 4 unidades):
+precio_unitario_neto = TOTAL ÷ (Unidades_columna × 4)
+Ejemplo: Salamin, unidades=3, total=30003.30 → 30003.30 ÷ (3×4) = 30003.30 ÷ 12 = 2500.28
+
+DULCE DE BATATA / MEMBRILLO / DULCE CON CHOCOLATE (cajas x5kg):
+precio_unitario_neto = TOTAL ÷ 5
+Ejemplo: Batata Cayfar x5kg, total=7821.70 → 7821.70 ÷ 5 = 1564.34
+
+QUESO CREMA "12 X 290G":
+precio_unitario_neto = TOTAL ÷ Unidades_columna ÷ 12
+Ejemplo: Queso Crema 12x290g, unidades=2, total=4856.36 → 4856.36 ÷ 2 ÷ 12 = 202.35
+
+═══════════════════════════════════════════════════════
 IGNORAR SIEMPRE
-═══════════════════════════════════════════
-- Servicios Administrativos, Flete, Percepción IVA, Percepción IIBB
-- Subtotales, totales generales, encabezados de grupo
-- Líneas con DTO 99.99% (son las bonificadas, ya las sumaste a las reales)
-- Cualquier cosa que no sea un producto físico vendible en góndola
+═══════════════════════════════════════════════════════
+- "Servicios Administrativos", "Flete", "Percepción IVA", "Percepción IIBB"
+- Líneas con IMPORTE negativo (son descuentos, no productos)
+- Líneas con DTO 99.99% (ya las contemplaste sumando las unidades)
+- Subtotales, totales generales de la boleta, encabezados de grupo
 
-═══════════════════════════════════════════
+═══════════════════════════════════════════════════════
 NOMBRES
-═══════════════════════════════════════════
-Limpiá los nombres para que sean legibles por personas no técnicas.
-Quitá códigos de material, abreviaturas innecesarias.
-Ejemplos: "COCA-COLA ZERO RP 2L X9" → "Coca Zero RP 2L x9"
-          "ESPECIAS PIMIENTA NEGRA MOLIDA LC 4DI x10U x23" → "Pimienta Negra Molida x23gr"
-          "BARRA LA PAULINA" → "Barra La Paulina (por kg)"
-          "SALCHICHON BIERZO PRIMAVERA" → "Salchichón Bierzo Primavera (por unidad)"
+═══════════════════════════════════════════════════════
+Limpiá los nombres para que sean legibles:
+"COCA-COLA ZERO RP 2L X9" → "Coca Zero RP 2L x9"
+"RP2LX9 COMB CCSO+CCZERO+SP+FN" → "Combo Coca RP 2L x9"
+"ESPECIAS PIMIENTA NEGRA MOLIDA LC 4DI x10U x23" → "Pimienta Negra Molida 23gr"
+"BARRA LA PAULINA" → "Barra La Paulina ($/kg)"
+"SALCHICHON BIERZO PRIMAVERA" → "Salchichón Bierzo (x unidad)"
 
-═══════════════════════════════════════════
+═══════════════════════════════════════════════════════
 RESPUESTA
-═══════════════════════════════════════════
-Respondé ÚNICAMENTE con JSON válido. Sin texto, sin markdown, sin explicaciones previas ni posteriores.
+═══════════════════════════════════════════════════════
+Respondé ÚNICAMENTE con JSON válido. Sin texto adicional, sin markdown, sin explicaciones.
 
 {
   "productos": [
     {
       "nombre": "Nombre limpio del producto",
       "precio_unitario_neto": 1234.56,
-      "descuento_detalle": "ZA RP 37.2% proporcional" 
+      "descuento_detalle": "ZA RP 37.2% proporcional"
     }
   ]
 }
