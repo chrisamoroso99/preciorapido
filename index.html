@@ -611,7 +611,20 @@ Ejemplos:
   Salchicha Tres Cruces 12x12, cant=12, imp.neto=21339.01 → 21339.01÷12 = 1778.25
   Milanesa de Soja x4, cant=3, imp.neto=5470.13 → 5470.13÷3 = 1823.38
 
-CASO 7 — TICKETS SIMPLES / REMEDIOS (formato: CANT | Producto | Precio_unitario | Total):
+CASO 8 — FULL NORTE / NESTLÉ y similares (columnas: CODIGO|BULTO|UNID.|DESCRIPCION|UNITARIO|DESC.|SUBTOTAL):
+El SUBTOTAL ya tiene el descuento aplicado y es el total del renglón.
+
+Cuando UNID. tiene un número → precio_unitario_neto = SUBTOTAL ÷ UNID.
+  Ejemplo: Gati Carne y Pollo 20x0.5kg, UNID=6, subtotal=10897.14 → 10897.14÷6 = 1816.19
+
+Cuando UNID. tiene "/" o está vacío → es un bulto completo, dividir por BULTO × multiplicador_del_nombre
+  El multiplicador es el primer número del nombre del producto (ej: "18X180G" → 18, "30X0.045G" → 30)
+  precio_unitario_neto = SUBTOTAL ÷ (BULTO × multiplicador_del_nombre)
+  Ejemplos:
+    Nesquik Polvo 18X180G, BULTO=1, UNID=/, subtotal=32768.52 → 32768.52÷(1×18) = 1820.47
+    Si fueran 2 bultos: subtotal sería ~65537, mismo resultado → 65537÷(2×18) = 1820.47
+
+CASO 9 — TICKETS SIMPLES / REMEDIOS (formato: CANT | Producto | Precio_unitario | Total):
 El precio unitario ya está en la boleta. Usalo directamente.
 precio_unitario_neto = Precio_unitario (columna del medio, no el total)
 Ignorá líneas con precio $0,00 (son nombres de local o referencias).
@@ -801,7 +814,7 @@ function sendWhatsApp() {
   const provider = document.getElementById('provider-select').value || 'el proveedor';
   let msg = `Hola, estos son los nuevos precios de *${provider}*:\n\n`;
   products.forEach(p => { msg += `• ${p.nombre}: ${fmt(calcFinalPrice(p.precio_unitario_neto, p.divisor))}\n`; });
-  msg += `\nYa saben, si lo tenemos más caro, no bajen el precio 😉`;
+  msg += `\nYa sabe, si lo tenemos más caro, no bajen el precio 😉`;
   window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
