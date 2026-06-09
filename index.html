@@ -577,7 +577,16 @@ CASO 5 — BOLETAS LOS HERMANOS / PAULINA (columnas: Codigo|Descripcion|Unidades
   Queso Crema (unidades individuales) → Total ÷ Unidades_columna
     Queso Crema L.P. 12x290g, unidades=2, total=4856.36 → 4856.36÷2 = 2428.18
 
-CASO 6 — TICKETS SIMPLES / REMEDIOS (formato: CANT | Producto | Precio_unitario | Total):
+CASO 6 — QUEFIAM / MARFRIG y similares (columnas: COD|DESCRIPCION|CANT|PESO|PRECIO|% BONIF|IMP.NETO):
+El PRECIO es por kilo pero el IMP.NETO ya tiene el descuento aplicado y es el total del renglón.
+precio_unitario_neto = IMP.NETO ÷ CANT
+Ejemplos:
+  Salchichas ICB x6 x24, cant=24, imp.neto=19784.83 → 19784.83÷24 = 824.37
+  Paty Clásico 4x80grs, cant=24, imp.neto=114056.42 → 114056.42÷24 = 4752.35
+  Salchicha Tres Cruces 12x12, cant=12, imp.neto=21339.01 → 21339.01÷12 = 1778.25
+  Milanesa de Soja x4, cant=3, imp.neto=5470.13 → 5470.13÷3 = 1823.38
+
+CASO 7 — TICKETS SIMPLES / REMEDIOS (formato: CANT | Producto | Precio_unitario | Total):
 El precio unitario ya está en la boleta. Usalo directamente.
 precio_unitario_neto = Precio_unitario (columna del medio, no el total)
 Ignorá líneas con precio $0,00 (son nombres de local o referencias).
