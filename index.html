@@ -251,6 +251,10 @@ select:focus, input:focus { border-color: var(--accent); }
       </div>
       <div class="product-list" id="product-list"></div>
     </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-label">📝 Observaciones</div>
+      <textarea id="observaciones" placeholder="Ej: Los precios rigen a partir de mañana…" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 13px;width:100%;outline:none;resize:vertical;min-height:80px;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+    </div>
     <button class="btn-wa" onclick="sendWhatsApp()">💬 ENVIAR POR WHATSAPP</button>
   </div>
 
@@ -815,9 +819,11 @@ document.getElementById('div-input').addEventListener('keydown', e => { if (e.ke
 // ══════════════════════════════════════════════════
 function sendWhatsApp() {
   const provider = document.getElementById('provider-select').value || 'el proveedor';
+  const obs = document.getElementById('observaciones')?.value.trim();
   let msg = `Hola, estos son los nuevos precios de *${provider}*:\n\n`;
   products.forEach(p => { msg += `• ${p.nombre}: ${fmt(calcFinalPrice(p.precio_unitario_neto, p.divisor))}\n`; });
-  msg += `\nYa sabe, si lo tenemos más caro, no bajen el precio 😉`;
+  if (obs) msg += `\n${obs}\n`;
+  msg += `\nYa saben, si lo tenemos más caro, no bajen el precio 😉`;
   window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
@@ -838,6 +844,8 @@ function resetApp() {
   zone.innerHTML = `<div class="upload-icon">📷</div><div class="upload-title">Sacar o cargar foto</div><div class="upload-sub">JPG · PNG · HEIC — se optimiza automáticamente</div>`;
   zone.onclick = () => document.getElementById('file-input').click();
   document.getElementById('manual-products-list').innerHTML = '';
+  const obs = document.getElementById('observaciones');
+  if (obs) obs.value = '';
   document.getElementById('results-section').classList.add('hidden');
   document.getElementById('btn-analyze').disabled = true;
   clearError();
