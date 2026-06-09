@@ -545,12 +545,37 @@ precio_unitario_neto = Total ÷ CANT ÷ primer_número_del_nombre
 Ejemplo: MONEDA JACK 60X5GR, cant=1, total=19195.31 → 19195.31÷1÷60 = 319.92
 
 CASO 3 — LADIAR (columnas: CODIGO|CANTIDAD|UN/DI|DESCRIPCION|PRECIO UNIT|% BONIFIC|PRECIO BONIF|SUBTOTAL|SUBTOTAL C/IVA):
-⚠️ SIEMPRE dividir por la columna CANTIDAD. NUNCA por los números del nombre del producto.
+⚠️ REGLA GENERAL: SIEMPRE dividir por la columna CANTIDAD. NUNCA por los números del nombre.
 precio_unitario_neto = SUBTOTAL_C_IVA ÷ CANTIDAD_columna
-Ejemplos:
+Ejemplos generales:
   "CHOCO COFLER BLOCK 24 UN x 300gr", CANTIDAD=3, subtotal_c_iva=31090.72 → 31090.72÷3 = 10363.57
   "PIMIENTA NEGRA 4DI x 10U x 23gr", CANTIDAD=20, subtotal_c_iva=23599.40 → 23599.40÷20 = 1179.97
   "PURE TOMATE ARCOR 12U x 520gr", CANTIDAD=12, subtotal_c_iva=10223.83 → 10223.83÷12 = 851.99
+
+⚠️ EXCEPCIÓN LADIAR — cuando CANTIDAD=1 DI para estos productos específicos:
+  GOMITAS MOGUL (cualquier variedad: Tiburón, Ositos, Sandia, Moras, Arañitas, etc.):
+    Si el nombre tiene cantidad de unidades (ej: "12DIx10UNx50GR" → 10UN, "12Dx10UNx40GR" → 10UN):
+      precio_unitario_neto = SUBTOTAL_C_IVA ÷ número_de_UN_en_el_nombre
+    Si el nombre NO tiene cantidad de unidades:
+      precio_unitario_neto = SUBTOTAL_C_IVA ÷ 12 (por defecto)
+    Ejemplos:
+      "MOGUL TIBURON 12 DI x 360gr", cant=1 DI, subtotal=5764.34 → 5764.34÷12 = 480.36
+      "GOMAS MOGUL SANDIA 1 DI x 10 UN x 50gr", cant=1 DI, subtotal=7776.15 → 7776.15÷10 = 777.62
+      "MOGUL JELLY BEAN EXTREME 12Dx10UNx50GR", cant=1 DI, subtotal=7776.15 → 7776.15÷10 = 777.62
+
+  CONFITE ROCKLETS (cualquier variedad):
+    Buscá el número de UN en el nombre y dividí por ese.
+    Ejemplos:
+      "CONFITE ROCKLETS MANI C/CHOCOLATE 16 UN x 40gr", cant=1 UN, subtotal=1184.42 → 1184.42÷16 = 74.03
+      "CONFITES ROCKLETS 12 DI x 720gr (18 UN x 40gr)", cant=1 DI, subtotal=21319.48 → 21319.48÷18 = 1184.42
+
+  BARRITA ÁGUILA (NO confundir con Alfajor Águila ni Chocolate Águila Taza):
+    Buscá el número de UN en el nombre y dividí por ese.
+    Ejemplo:
+      "BARRITA AGUILA 70% CACAO 24Dx24UNx14GR", cant=1 DI, subtotal=21555.70 → 21555.70÷24 = 898.15
+
+  TODO LO DEMÁS con CANTIDAD=1 DI → precio_unitario_neto = SUBTOTAL_C_IVA ÷ 1 (precio por display entero)
+  ALFAJOR ÁGUILA con CANTIDAD=8 → precio_unitario_neto = SUBTOTAL_C_IVA ÷ 8 (regla general)
 
 CASO 4 — LA SERENÍSIMA (columnas: MATERIAL|DESCRIPCION|CANT|CONF|P.U.|IVA|OFERTA TRANSITORIA|IMPORTE):
 Si hay % en "OFERTA TRANSITORIA", el descuento ya está aplicado en el IMPORTE. Usá IMPORTE directamente.
@@ -776,7 +801,7 @@ function sendWhatsApp() {
   const provider = document.getElementById('provider-select').value || 'el proveedor';
   let msg = `Hola, estos son los nuevos precios de *${provider}*:\n\n`;
   products.forEach(p => { msg += `• ${p.nombre}: ${fmt(calcFinalPrice(p.precio_unitario_neto, p.divisor))}\n`; });
-  msg += `\nYa sabe, si lo tenemos más caro, no bajen el precio 😉`;
+  msg += `\nYa saben, si lo tenemos más caro, no bajen el precio 😉`;
   window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
