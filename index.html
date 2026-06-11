@@ -469,12 +469,21 @@ function startEditProvider(idx) {
 }
 
 function saveEditProvider(idx) {
-  const newVal = document.getElementById(`pedit-${idx}`).value.trim();
+  const input = document.getElementById(`pedit-${idx}`);
+  const newVal = input ? input.value.trim() : '';
   if (!newVal) return;
   const list = getProviders();
+  const oldVal = list[idx];
   list[idx] = newVal;
   saveProviders(list);
-  loadProviders();
+  // Si el proveedor seleccionado era el editado, actualizarlo
+  const sel = document.getElementById('provider-select');
+  if (sel.value === oldVal) {
+    loadProviders();
+    sel.value = newVal;
+  } else {
+    loadProviders();
+  }
   renderManageProviders();
 }
 
