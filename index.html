@@ -357,6 +357,7 @@ function setMode(mode) {
 let manualIdCounter = 0;
 
 function addManualRow() {
+  saveManualValues();
   const id = manualIdCounter++;
   manualRows.push(id);
   renderManualRows();
@@ -364,23 +365,38 @@ function addManualRow() {
 }
 
 function removeManualRow(id) {
+  saveManualValues();
   manualRows = manualRows.filter(r => r !== id);
+  delete manualValues[id];
   renderManualRows();
   checkReady();
+}
+
+let manualValues = {};
+
+function saveManualValues() {
+  manualRows.forEach(id => {
+    manualValues[id] = {
+      nombre: document.getElementById(`mn-${id}`)?.value || '',
+      precio: document.getElementById(`mp-${id}`)?.value || '',
+      unidades: document.getElementById(`mu-${id}`)?.value || '1'
+    };
+  });
 }
 
 function renderManualRows() {
   const container = document.getElementById('manual-products-list');
   container.innerHTML = '';
   manualRows.forEach(id => {
+    const saved = manualValues[id] || {};
     const div = document.createElement('div');
     div.className = 'manual-product-row';
     div.innerHTML = `
-      <input type="text" id="mn-${id}" placeholder="Nombre del producto" oninput="checkReady()">
+      <input type="text" id="mn-${id}" placeholder="Nombre del producto" value="${esc(saved.nombre||'')}" oninput="checkReady()">
       <div class="manual-row-inputs">
-        <input type="number" id="mp-${id}" placeholder="Precio total" inputmode="decimal" style="flex:2" oninput="checkReady()">
-        <input type="number" id="mu-${id}" placeholder="Unidades" inputmode="numeric" value="1" style="flex:1" oninput="checkReady()">
-        <button class="btn-remove-manual" onclick="removeManualRow(${id})">✕</button>
+        <input type="number" id="mp-${id}" placeholder="Precio total" inputmode="decimal" style="flex:2" value="${saved.precio||''}" oninput="checkReady()">
+        <input type="number" id="mu-${id}" placeholder="Unidades" inputmode="numeric" value="${saved.unidades||'1'}" style="flex:1" oninput="checkReady()">
+        <button class="btn-remove-manual" onclick="saveManualValues();removeManualRow(${id})">✕</button>
       </div>`;
     container.appendChild(div);
   });
@@ -388,10 +404,12 @@ function renderManualRows() {
 }
 
 function getManualProducts() {
+  saveManualValues();
   return manualRows.map(id => {
-    const nombre = document.getElementById(`mn-${id}`)?.value.trim() || '';
-    const precio = parseFloat(document.getElementById(`mp-${id}`)?.value) || 0;
-    const unidades = parseFloat(document.getElementById(`mu-${id}`)?.value) || 1;
+    const saved = manualValues[id] || {};
+    const nombre = saved.nombre || '';
+    const precio = parseFloat(saved.precio) || 0;
+    const unidades = parseFloat(saved.unidades) || 1;
     return { nombre, precio_total: precio, unidades };
   }).filter(p => p.nombre && p.precio_total > 0);
 }
@@ -838,7 +856,7 @@ function showError(msg) {
 function clearError() { document.getElementById('error-box').classList.add('hidden'); }
 
 function resetApp() {
-  imageBase64 = null; products = []; manualRows = []; manualIdCounter = 0;
+  imageBase64 = null; products = []; manualRows = []; manualIdCounter = 0; manualValues = {};
   const zone = document.getElementById('upload-zone');
   zone.classList.remove('has-image');
   zone.innerHTML = `<div class="upload-icon">📷</div><div class="upload-title">Sacar o cargar foto</div><div class="upload-sub">JPG · PNG · HEIC — se optimiza automáticamente</div>`;
