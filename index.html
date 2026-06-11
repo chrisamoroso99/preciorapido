@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0f0f0f">
-<title>PrecioRápido</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#0f0f0f" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f5f3ef" media="(prefers-color-scheme: light)">
+<title>BoletApp</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
@@ -23,35 +24,47 @@
   --red: #e05a2b;
   --red-dim: rgba(224,90,43,0.12);
   --text: #f0ece4;
-  --muted: #777;
+  --text2: #aaa;
+  --muted: #666;
   --radius: 14px;
   --radius-sm: 9px;
 }
 
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f5f3ef;
+    --surface: #ffffff;
+    --surface2: #f0ece4;
+    --surface3: #e8e4dc;
+    --border: #ddd8ce;
+    --accent: #d4a017;
+    --accent-dim: rgba(212,160,23,0.12);
+    --green: #2e7d5e;
+    --green-dim: rgba(46,125,94,0.12);
+    --red: #c0410f;
+    --red-dim: rgba(192,65,15,0.10);
+    --text: #1a1714;
+    --text2: #555;
+    --muted: #999;
+  }
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  min-height: 100dvh;
-  overflow-x: hidden;
-}
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100dvh; overflow-x: hidden; }
 
 header {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(15,15,15,0.93);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
   padding: 13px 18px;
   display: flex; align-items: center; justify-content: space-between;
 }
 .logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 3px; color: var(--accent); line-height: 1; }
 .logo em { color: var(--text); font-style: normal; }
-.btn-nueva { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 7px 12px; cursor: pointer; transition: all 0.15s; }
-.btn-nueva:active { border-color: var(--accent); color: var(--accent); }
+.header-btns { display: flex; gap: 8px; }
+.btn-header { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 7px 12px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.btn-header:active { border-color: var(--accent); color: var(--accent); }
 
 main { padding: 16px 14px 110px; max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
 
@@ -59,12 +72,12 @@ main { padding: 16px 14px 110px; max-width: 560px; margin: 0 auto; display: flex
 .card-label { font-size: 10px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
 
 /* UPLOAD */
-.upload-zone { border: 2px dashed var(--border); border-radius: var(--radius-sm); min-height: 130px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; overflow: hidden; padding: 24px 16px; }
+.upload-zone { border: 2px dashed var(--border); border-radius: var(--radius-sm); min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; overflow: hidden; padding: 20px 16px; }
 .upload-zone:active { background: var(--surface2); border-color: var(--accent); }
 .upload-zone.has-image { border-style: solid; border-color: var(--accent); padding: 0; min-height: unset; }
-.upload-zone.has-image img { width: 100%; display: block; border-radius: 11px; max-height: 300px; object-fit: cover; }
-.upload-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.75)); padding: 28px 14px 12px; font-size: 12px; color: var(--accent); font-weight: 600; }
-.upload-icon { font-size: 36px; }
+.upload-zone.has-image img { width: 100%; display: block; border-radius: 11px; max-height: 260px; object-fit: cover; }
+.upload-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.75)); padding: 24px 14px 10px; font-size: 12px; color: var(--accent); font-weight: 600; }
+.upload-icon { font-size: 32px; }
 .upload-title { font-size: 15px; font-weight: 500; }
 .upload-sub { font-size: 12px; color: var(--muted); }
 #file-input { display: none; }
@@ -75,12 +88,17 @@ main { padding: 16px 14px 110px; max-width: 560px; margin: 0 auto; display: flex
 .mode-tab.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
 
 /* INPUTS */
-select, input[type="text"], input[type="number"] { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; padding: 11px 13px; width: 100%; outline: none; -webkit-appearance: none; appearance: none; transition: border-color 0.15s; }
-select:focus, input:focus { border-color: var(--accent); }
+select, input[type="text"], input[type="number"], textarea { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; padding: 11px 13px; width: 100%; outline: none; -webkit-appearance: none; appearance: none; transition: border-color 0.15s; }
+select:focus, input:focus, textarea:focus { border-color: var(--accent); }
 
 .provider-row { display: flex; gap: 8px; align-items: stretch; }
-.btn-add { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 22px; width: 48px; min-width: 48px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-.btn-add:active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.btn-icon { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 20px; width: 48px; min-width: 48px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.btn-icon:active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+/* LOCAL SELECTOR */
+.local-tabs { display: flex; gap: 6px; margin-bottom: 0; }
+.local-tab { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 8px; cursor: pointer; transition: all 0.15s; text-align: center; }
+.local-tab.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
 
 /* MARKUP */
 .markup-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
@@ -90,20 +108,22 @@ select:focus, input:focus { border-color: var(--accent); }
 .markup-field input { border: none; border-radius: 0; background: none; font-size: 22px; font-weight: 700; text-align: right; padding: 10px 6px 10px 12px; width: 100%; }
 .markup-pct { font-size: 22px; font-weight: 700; color: var(--accent); padding: 0 13px 0 2px; }
 
-.toggles { display: flex; gap: 8px; }
-.toggle { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 11px 8px; cursor: pointer; transition: all 0.15s; text-align: center; }
+/* TOGGLES */
+.toggles { display: flex; gap: 6px; flex-wrap: wrap; }
+.toggle { flex: 1; min-width: 80px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; padding: 10px 6px; cursor: pointer; transition: all 0.15s; text-align: center; }
 .toggle.on { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.toggle-extra-wrap { display: flex; gap: 6px; align-items: center; flex: 1; min-width: 100px; }
+.toggle-extra-input { font-size: 13px; padding: 9px 8px; text-align: center; width: 70px; min-width: unset; }
 
 /* BTN ANALIZAR */
 .btn-analyze { width: 100%; background: var(--accent); color: #000; border: none; border-radius: var(--radius); font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 3px; padding: 17px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 10px; }
 .btn-analyze:active { transform: scale(0.98); opacity: 0.85; }
 .btn-analyze:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
 
-/* CARGA MANUAL */
+/* MANUAL */
 .manual-product-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
 .manual-product-row:last-of-type { border-bottom: none; }
 .manual-row-inputs { display: flex; gap: 6px; }
-.manual-row-inputs input { flex: 1; }
 .btn-remove-manual { background: none; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--muted); font-size: 16px; width: 44px; min-width: 44px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .btn-remove-manual:active { background: var(--red-dim); border-color: var(--red); color: var(--red); }
 .btn-add-manual { width: 100%; background: none; border: 1px dashed var(--border); border-radius: var(--radius-sm); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 11px; cursor: pointer; margin-top: 4px; transition: all 0.15s; }
@@ -132,11 +152,9 @@ select:focus, input:focus { border-color: var(--accent); }
 .p-discount { font-size: 11px; color: var(--green); font-weight: 600; margin-bottom: 2px; }
 .p-base { font-size: 11px; color: var(--muted); }
 .p-div-badge { font-size: 10px; color: var(--accent); font-weight: 600; margin-top: 2px; }
-
 .p-price-col { text-align: right; flex-shrink: 0; }
 .p-price { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--accent); letter-spacing: 1px; line-height: 1; }
 .p-unit { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
 .p-actions { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
 .btn-sm { background: none; border: 1px solid var(--border); border-radius: 7px; color: var(--muted); font-size: 13px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.12s; }
 .btn-sm:active { transform: scale(0.88); }
@@ -145,7 +163,6 @@ select:focus, input:focus { border-color: var(--accent); }
 .btn-sm.save { background: var(--accent); border-color: var(--accent); color: #000; }
 .btn-sm.div { font-size: 16px; font-weight: 700; }
 .btn-sm.div:active { background: var(--green-dim); border-color: var(--green); color: var(--green); }
-
 .p-name-edit { font-size: 13px; font-weight: 500; background: var(--surface3); border: 1px solid var(--accent); border-radius: 6px; color: var(--text); font-family: 'DM Sans', sans-serif; padding: 5px 8px; width: 100%; margin-bottom: 5px; outline: none; }
 .p-price-edit { font-family: 'Bebas Neue', sans-serif; font-size: 20px; background: var(--surface3); border: 1px solid var(--accent); border-radius: 6px; color: var(--accent); text-align: right; padding: 4px 8px; width: 100%; outline: none; }
 
@@ -153,10 +170,20 @@ select:focus, input:focus { border-color: var(--accent); }
 .btn-wa { width: 100%; background: #25D366; color: #fff; border: none; border-radius: var(--radius); font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 3px; padding: 17px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 10px; }
 .btn-wa:active { opacity: 0.85; transform: scale(0.98); }
 
+/* HISTORIAL */
+.historial-item { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: border-color 0.15s; margin-bottom: 8px; }
+.historial-item:active { border-color: var(--accent); }
+.historial-info { flex: 1; min-width: 0; }
+.historial-proveedor { font-size: 14px; font-weight: 600; }
+.historial-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.historial-arrow { color: var(--muted); font-size: 16px; }
+.historial-empty { text-align: center; color: var(--muted); font-size: 14px; padding: 24px; }
+
 /* MODAL */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: flex; align-items: flex-end; justify-content: center; z-index: 200; animation: fadeO 0.18s ease; }
+@media (prefers-color-scheme: light) { .modal-overlay { background: rgba(0,0,0,0.4); } }
 @keyframes fadeO { from { opacity: 0; } to { opacity: 1; } }
-.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px 20px 0 0; padding: 28px 20px 40px; width: 100%; max-width: 560px; animation: slideU 0.22s ease; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px 20px 0 0; padding: 28px 20px 40px; width: 100%; max-width: 560px; animation: slideU 0.22s ease; max-height: 85dvh; overflow-y: auto; }
 @keyframes slideU { from { transform: translateY(100%); } to { transform: translateY(0); } }
 .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; margin-bottom: 16px; }
 .modal-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
@@ -164,17 +191,38 @@ select:focus, input:focus { border-color: var(--accent); }
 .btn-cancel { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; padding: 13px; cursor: pointer; }
 .btn-confirm { flex: 2; background: var(--accent); border: none; border-radius: var(--radius-sm); color: #000; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; padding: 13px; cursor: pointer; }
 
+/* PROVEEDOR ADMIN */
+.prov-item { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.prov-item:last-child { border-bottom: none; }
+.prov-name { flex: 1; font-size: 15px; }
+.prov-edit-input { flex: 1; font-size: 14px; padding: 7px 10px; }
+.btn-prov-action { background: none; border: 1px solid var(--border); border-radius: 7px; color: var(--muted); font-size: 14px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.btn-prov-action.save:active { background: var(--accent-dim); }
+.btn-prov-action.del:active { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+
 .hidden { display: none !important; }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">Precio<em>Rápido</em></div>
-  <button class="btn-nueva" onclick="resetApp()">🔄 Nueva boleta</button>
+  <div class="logo">Bolet<em>App</em></div>
+  <div class="header-btns">
+    <button class="btn-header" onclick="showHistorial()">📋 Historial</button>
+    <button class="btn-header" onclick="resetApp()">🔄 Nueva</button>
+  </div>
 </header>
 
 <main>
+
+  <!-- LOCAL -->
+  <div class="card">
+    <div class="card-label">📍 Local</div>
+    <div class="local-tabs">
+      <button class="local-tab active" id="local-espana" onclick="setLocal('espana')">España</button>
+      <button class="local-tab" id="local-gelly" onclick="setLocal('gelly')">Gelly y Obes</button>
+    </div>
+  </div>
 
   <!-- PROVEEDOR -->
   <div class="card">
@@ -183,7 +231,8 @@ select:focus, input:focus { border-color: var(--accent); }
       <select id="provider-select">
         <option value="">— Seleccioná un proveedor —</option>
       </select>
-      <button class="btn-add" onclick="showAddProvider()">＋</button>
+      <button class="btn-icon" onclick="showAddProvider()" title="Agregar">＋</button>
+      <button class="btn-icon" onclick="showManageProviders()" title="Administrar">⚙️</button>
     </div>
   </div>
 
@@ -194,8 +243,6 @@ select:focus, input:focus { border-color: var(--accent); }
       <button class="mode-tab active" id="tab-foto" onclick="setMode('foto')">📷 Foto</button>
       <button class="mode-tab" id="tab-manual" onclick="setMode('manual')">✏️ Manual</button>
     </div>
-
-    <!-- MODO FOTO -->
     <div id="mode-foto">
       <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
         <div class="upload-icon">📷</div>
@@ -204,8 +251,6 @@ select:focus, input:focus { border-color: var(--accent); }
       </div>
       <input type="file" id="file-input" accept="image/*">
     </div>
-
-    <!-- MODO MANUAL -->
     <div id="mode-manual" class="hidden">
       <div id="manual-products-list"></div>
       <button class="btn-add-manual" onclick="addManualRow()">＋ Agregar producto</button>
@@ -225,7 +270,17 @@ select:focus, input:focus { border-color: var(--accent); }
     <div class="toggles">
       <button class="toggle" id="toggle-iva" onclick="toggleTax('iva')">IVA 21%</button>
       <button class="toggle" id="toggle-gan" onclick="toggleTax('gan')">Ganancias 5%</button>
+      <div class="toggle-extra-wrap">
+        <button class="toggle" id="toggle-extra" onclick="toggleTax('extra')" style="flex:0;white-space:nowrap">+ Impuesto</button>
+        <input type="number" class="toggle-extra-input" id="extra-pct" placeholder="%" inputmode="decimal" min="0" max="99" oninput="if(products.length)renderProducts()">
+      </div>
     </div>
+  </div>
+
+  <!-- INSTRUCCIONES -->
+  <div class="card">
+    <div class="card-label">🧠 Instrucciones para Claude (opcional)</div>
+    <textarea id="instrucciones" placeholder="Ej: Esta boleta es de Los Hermanos, dividir fiambres por kilos…" style="min-height:70px;resize:vertical"></textarea>
   </div>
 
   <!-- ERROR -->
@@ -253,21 +308,32 @@ select:focus, input:focus { border-color: var(--accent); }
     </div>
     <div class="card" style="margin-bottom:10px">
       <div class="card-label">📝 Observaciones</div>
-      <textarea id="observaciones" placeholder="Ej: Los precios rigen a partir de mañana…" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 13px;width:100%;outline:none;resize:vertical;min-height:80px;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+      <textarea id="observaciones" placeholder="Ej: Los precios rigen a partir de mañana…" style="min-height:70px;resize:vertical"></textarea>
     </div>
     <button class="btn-wa" onclick="sendWhatsApp()">💬 ENVIAR POR WHATSAPP</button>
   </div>
 
 </main>
 
-<!-- MODAL PROVEEDOR -->
+<!-- MODAL AGREGAR PROVEEDOR -->
 <div class="modal-overlay hidden" id="modal-provider" onclick="handleOverlayClick(event,'modal-provider')">
   <div class="modal">
     <div class="modal-title">Nuevo Proveedor</div>
-    <input type="text" id="new-provider-input" placeholder="Ej: Coca Cola, BAI, Remedios…">
+    <input type="text" id="new-provider-input" placeholder="Ej: Coca Cola, BAI, Nestlé…">
     <div class="modal-row">
       <button class="btn-cancel" onclick="hideModal('modal-provider')">Cancelar</button>
       <button class="btn-confirm" onclick="addProvider()">Agregar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADMINISTRAR PROVEEDORES -->
+<div class="modal-overlay hidden" id="modal-manage" onclick="handleOverlayClick(event,'modal-manage')">
+  <div class="modal">
+    <div class="modal-title">Administrar Proveedores</div>
+    <div id="manage-providers-list"></div>
+    <div class="modal-row">
+      <button class="btn-confirm" onclick="hideModal('modal-manage')">Listo</button>
     </div>
   </div>
 </div>
@@ -276,11 +342,38 @@ select:focus, input:focus { border-color: var(--accent); }
 <div class="modal-overlay hidden" id="modal-div" onclick="handleOverlayClick(event,'modal-div')">
   <div class="modal">
     <div class="modal-title">Dividir precio</div>
-    <div class="modal-subtitle">¿Por cuántas unidades querés dividir el precio final?<br>Ej: una caja de 6 vinos → ingresá 6</div>
+    <div class="modal-subtitle">¿Por cuántas unidades dividir el precio final?<br>Ej: caja de 6 vinos → ingresá 6</div>
     <input type="number" id="div-input" placeholder="Ej: 6" inputmode="numeric" min="1">
     <div class="modal-row">
       <button class="btn-cancel" onclick="hideModal('modal-div')">Cancelar</button>
       <button class="btn-confirm" onclick="confirmDiv()">Dividir</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL HISTORIAL -->
+<div class="modal-overlay hidden" id="modal-historial" onclick="handleOverlayClick(event,'modal-historial')">
+  <div class="modal">
+    <div class="modal-title">Historial</div>
+    <div class="local-tabs" style="margin-bottom:16px">
+      <button class="local-tab active" id="hist-tab-espana" onclick="setHistLocal('espana')">España</button>
+      <button class="local-tab" id="hist-tab-gelly" onclick="setHistLocal('gelly')">Gelly y Obes</button>
+    </div>
+    <div id="historial-list"></div>
+    <div class="modal-row">
+      <button class="btn-confirm" onclick="hideModal('modal-historial')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL VER BOLETA HISTORIAL -->
+<div class="modal-overlay hidden" id="modal-hist-detail" onclick="handleOverlayClick(event,'modal-hist-detail')">
+  <div class="modal">
+    <div class="modal-title" id="hist-detail-title">Boleta</div>
+    <div class="product-list" id="hist-detail-list" style="margin-bottom:16px"></div>
+    <button class="btn-wa" onclick="sendHistWhatsApp()" style="margin-bottom:10px">💬 ENVIAR POR WHATSAPP</button>
+    <div class="modal-row">
+      <button class="btn-confirm" onclick="hideModal('modal-hist-detail')">Cerrar</button>
     </div>
   </div>
 </div>
@@ -291,31 +384,42 @@ select:focus, input:focus { border-color: var(--accent); }
 // ══════════════════════════════════════════════════
 let imageBase64 = null;
 let products = [];
-let ivaOn = false;
-let ganOn = false;
+let ivaOn = false, ganOn = false, extraOn = false;
 let currentMode = 'foto';
-let manualRows = [];
+let currentLocal = 'espana';
+let manualRows = [], manualIdCounter = 0, manualValues = {};
 let divTargetId = null;
+let histLocal = 'espana';
+let currentHistEntry = null;
+
+// ══════════════════════════════════════════════════
+// LOCAL
+// ══════════════════════════════════════════════════
+function setLocal(local) {
+  currentLocal = local;
+  document.getElementById('local-espana').classList.toggle('active', local === 'espana');
+  document.getElementById('local-gelly').classList.toggle('active', local === 'gelly');
+}
 
 // ══════════════════════════════════════════════════
 // PROVIDERS
 // ══════════════════════════════════════════════════
-const DEFAULT_PROVIDERS = ['Coca Cola','BAI','La Serenísima','Arcor','Molinos','Quilmes','Ladiar','Jumael','Los Hermanos','Remedios'];
+const DEFAULT_PROVIDERS = ['Coca Cola','BAI','La Serenísima','Arcor','Molinos','Quilmes','Ladiar','Jumael','Los Hermanos','Remedios','Nestlé'];
+
+function getProviders() {
+  const raw = localStorage.getItem('providers');
+  return raw ? JSON.parse(raw) : [...DEFAULT_PROVIDERS];
+}
+function saveProviders(list) { localStorage.setItem('providers', JSON.stringify(list)); }
 
 function loadProviders() {
-  const raw = localStorage.getItem('providers');
-  const list = raw ? JSON.parse(raw) : DEFAULT_PROVIDERS;
+  const list = getProviders();
   const sel = document.getElementById('provider-select');
   const current = sel.value;
   sel.innerHTML = '<option value="">— Seleccioná un proveedor —</option>';
-  list.forEach(p => {
-    const o = document.createElement('option');
-    o.value = p; o.textContent = p; sel.appendChild(o);
-  });
+  list.forEach(p => { const o = document.createElement('option'); o.value = p; o.textContent = p; sel.appendChild(o); });
   if (current) sel.value = current;
 }
-
-function saveProviders(list) { localStorage.setItem('providers', JSON.stringify(list)); }
 
 function showAddProvider() {
   document.getElementById('new-provider-input').value = '';
@@ -326,13 +430,60 @@ function showAddProvider() {
 function addProvider() {
   const val = document.getElementById('new-provider-input').value.trim();
   if (!val) return;
-  const raw = localStorage.getItem('providers');
-  const list = raw ? JSON.parse(raw) : [...DEFAULT_PROVIDERS];
+  const list = getProviders();
   if (!list.includes(val)) { list.push(val); saveProviders(list); }
   loadProviders();
   document.getElementById('provider-select').value = val;
   hideModal('modal-provider');
   checkReady();
+}
+
+function showManageProviders() {
+  renderManageProviders();
+  document.getElementById('modal-manage').classList.remove('hidden');
+}
+
+function renderManageProviders() {
+  const list = getProviders();
+  const container = document.getElementById('manage-providers-list');
+  container.innerHTML = '';
+  list.forEach((p, idx) => {
+    const div = document.createElement('div');
+    div.className = 'prov-item';
+    div.innerHTML = `
+      <span class="prov-name" id="pname-${idx}">${esc(p)}</span>
+      <input class="prov-edit-input hidden" id="pedit-${idx}" value="${esc(p)}">
+      <button class="btn-prov-action" onclick="startEditProvider(${idx})" id="pbtn-edit-${idx}" title="Editar">✏️</button>
+      <button class="btn-prov-action save hidden" onclick="saveEditProvider(${idx})" id="pbtn-save-${idx}" title="Guardar">✓</button>
+      <button class="btn-prov-action del" onclick="deleteProvider(${idx})" title="Eliminar">🗑</button>`;
+    container.appendChild(div);
+  });
+}
+
+function startEditProvider(idx) {
+  document.getElementById(`pname-${idx}`).classList.add('hidden');
+  document.getElementById(`pedit-${idx}`).classList.remove('hidden');
+  document.getElementById(`pbtn-edit-${idx}`).classList.add('hidden');
+  document.getElementById(`pbtn-save-${idx}`).classList.remove('hidden');
+  document.getElementById(`pedit-${idx}`).focus();
+}
+
+function saveEditProvider(idx) {
+  const newVal = document.getElementById(`pedit-${idx}`).value.trim();
+  if (!newVal) return;
+  const list = getProviders();
+  list[idx] = newVal;
+  saveProviders(list);
+  loadProviders();
+  renderManageProviders();
+}
+
+function deleteProvider(idx) {
+  const list = getProviders();
+  list.splice(idx, 1);
+  saveProviders(list);
+  loadProviders();
+  renderManageProviders();
 }
 
 function hideModal(id) { document.getElementById(id).classList.add('hidden'); }
@@ -354,8 +505,6 @@ function setMode(mode) {
 // ══════════════════════════════════════════════════
 // MANUAL INPUT
 // ══════════════════════════════════════════════════
-let manualIdCounter = 0;
-
 function addManualRow() {
   saveManualValues();
   const id = manualIdCounter++;
@@ -371,8 +520,6 @@ function removeManualRow(id) {
   renderManualRows();
   checkReady();
 }
-
-let manualValues = {};
 
 function saveManualValues() {
   manualRows.forEach(id => {
@@ -407,10 +554,7 @@ function getManualProducts() {
   saveManualValues();
   return manualRows.map(id => {
     const saved = manualValues[id] || {};
-    const nombre = saved.nombre || '';
-    const precio = parseFloat(saved.precio) || 0;
-    const unidades = parseFloat(saved.unidades) || 1;
-    return { nombre, precio_total: precio, unidades };
+    return { nombre: saved.nombre||'', precio_total: parseFloat(saved.precio)||0, unidades: parseFloat(saved.unidades)||1 };
   }).filter(p => p.nombre && p.precio_total > 0);
 }
 
@@ -425,12 +569,10 @@ document.getElementById('file-input').addEventListener('change', async (e) => {
     imageBase64 = await compressImage(file);
     const zone = document.getElementById('upload-zone');
     zone.classList.add('has-image');
-    zone.innerHTML = `<img src="data:image/jpeg;base64,${imageBase64}" alt="Boleta"><div class="upload-overlay">📷 Tocá para cambiar la foto</div>`;
+    zone.innerHTML = `<img src="data:image/jpeg;base64,${imageBase64}" alt="Boleta"><div class="upload-overlay">📷 Tocá para cambiar</div>`;
     zone.onclick = () => document.getElementById('file-input').click();
     checkReady();
-  } catch(err) {
-    showError('No se pudo procesar la imagen. Intentá con otra foto.');
-  }
+  } catch { showError('No se pudo procesar la imagen.'); }
   e.target.value = '';
 });
 
@@ -448,8 +590,7 @@ function compressImage(file) {
         const canvas = document.createElement('canvas');
         canvas.width = w; canvas.height = h;
         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        let q = 0.88;
-        let b64 = canvas.toDataURL('image/jpeg', q).split(',')[1];
+        let q = 0.88, b64 = canvas.toDataURL('image/jpeg', q).split(',')[1];
         while (b64.length > 4.5*1024*1024 && q > 0.25) { q -= 0.08; b64 = canvas.toDataURL('image/jpeg', q).split(',')[1]; }
         resolve(b64);
       };
@@ -464,9 +605,7 @@ function compressImage(file) {
 // ══════════════════════════════════════════════════
 function checkReady() {
   const hasProvider = !!document.getElementById('provider-select').value;
-  let ready = false;
-  if (currentMode === 'foto') ready = hasProvider && !!imageBase64;
-  else ready = hasProvider && getManualProducts().length > 0;
+  let ready = currentMode === 'foto' ? hasProvider && !!imageBase64 : hasProvider && getManualProducts().length > 0;
   document.getElementById('btn-analyze').disabled = !ready;
 }
 document.getElementById('provider-select').addEventListener('change', checkReady);
@@ -476,33 +615,34 @@ document.getElementById('provider-select').addEventListener('change', checkReady
 // ══════════════════════════════════════════════════
 function toggleTax(type) {
   if (type === 'iva') { ivaOn = !ivaOn; document.getElementById('toggle-iva').classList.toggle('on', ivaOn); }
-  else { ganOn = !ganOn; document.getElementById('toggle-gan').classList.toggle('on', ganOn); }
+  else if (type === 'gan') { ganOn = !ganOn; document.getElementById('toggle-gan').classList.toggle('on', ganOn); }
+  else { extraOn = !extraOn; document.getElementById('toggle-extra').classList.toggle('on', extraOn); }
   if (products.length) renderProducts();
 }
 
 // ══════════════════════════════════════════════════
 // PRICE LOGIC
 // ══════════════════════════════════════════════════
-function calcFinalPrice(precioUnitarioNeto, divisor) {
+function calcFinalPrice(neto, divisor) {
   divisor = divisor || 1;
   const markup = parseFloat(document.getElementById('markup-input').value) || 40;
-  let p = precioUnitarioNeto * (1 + markup/100);
+  let p = neto * (1 + markup/100);
   if (ivaOn) p *= 1.21;
   if (ganOn) p *= 1.05;
-  p = p / divisor;
-  return roundToHundred(p);
+  if (extraOn) { const ep = parseFloat(document.getElementById('extra-pct').value) || 0; p *= (1 + ep/100); }
+  return roundToHundred(p / divisor);
 }
 
 function roundToHundred(price) {
   const base = Math.floor(price / 100) * 100;
-  const rem = price - base;
-  return rem <= 30 ? base : base + 100;
+  return (price - base) <= 30 ? base : base + 100;
 }
 
 function fmt(n) { return '$' + Math.round(n).toLocaleString('es-AR'); }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 // ══════════════════════════════════════════════════
-// HANDLE ANALYZE (foto o manual)
+// HANDLE ANALYZE
 // ══════════════════════════════════════════════════
 function handleAnalyze() {
   if (currentMode === 'foto') analyzeInvoice();
@@ -510,19 +650,13 @@ function handleAnalyze() {
 }
 
 function processManual() {
-  const manualProds = getManualProducts();
-  if (!manualProds.length) return;
-  products = manualProds.map((p, i) => ({
-    id: i,
-    nombre: p.nombre,
-    precio_unitario_neto: p.precio_total / p.unidades,
-    descuento_detalle: '',
-    divisor: 1,
-    editing: false
-  }));
+  const prods = getManualProducts();
+  if (!prods.length) return;
+  products = prods.map((p, i) => ({ id: i, nombre: p.nombre, precio_unitario_neto: p.precio_total / p.unidades, descuento_detalle: '', divisor: 1, editing: false }));
   renderProducts();
   document.getElementById('results-section').classList.remove('hidden');
   document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  saveToHistorial();
 }
 
 // ══════════════════════════════════════════════════
@@ -542,158 +676,92 @@ Columna de precio: SIEMPRE la ÚLTIMA columna numérica positiva por renglón (s
 CASOS POR TIPO DE BOLETA
 ═══════════════════════════════════════════
 
-CASO 1 — BEBIDAS CON MULTIPLICADOR EN EL NOMBRE (Coca Cola, Quilmes, BAI, etc.):
-Vendidas por unidad individual. El nombre indica unidades por pack: X9=9, X8=8, X6=6, X24=24, 4X6=24, NR 4X6=24.
+CASO 1 — BEBIDAS CON MULTIPLICADOR EN EL NOMBRE (Coca Cola, Quilmes, etc.):
+Vendidas por unidad individual. X9=9, X8=8, X6=6, X24=24, 4X6=24, NR 4X6=24.
 precio_unitario_neto = Importe ÷ CANT ÷ unidades_por_pack
 
 ⚠️ CRÍTICO Coca Cola — descuentos como línea negativa:
-Líneas con nombre "ZA...", "DTO" y monto NEGATIVO son descuentos. Usá el monto negativo directamente (ignorá el porcentaje del texto).
-Asocialos a los productos anteriores por nombre/proximidad y distribuí proporcionalmente.
-precio_unitario_neto = (Importe_producto - descuento_proporcional) ÷ CANT ÷ unidades_por_pack
-
-Ejemplo Coca Cola:
-  RP2LX9, cant=1, importe=32250, descuento_prop=11353.52 → (32250-11353.52)÷1÷9 = 2321.83
-  CC PET 1.75X8, cant=1, importe=33333.34, descuento=-11387.90 → (33333.34-11387.90)÷1÷8 = 2743.18
+Usá el monto negativo directamente (ignorá el % del texto). Distribuí proporcionalmente entre productos relacionados.
+precio_unitario_neto = (Importe - descuento_proporcional) ÷ CANT ÷ unidades_por_pack
+Ejemplo: RP2LX9, cant=1, importe=32250, desc_prop=11353.52 → (32250-11353.52)÷1÷9 = 2321.83
 
 ⚠️ CRÍTICO BAI — líneas duplicadas con DTO 99.99%:
-Cada producto aparece DOS veces. La segunda con DTO 99.99% son unidades BONIFICADAS (gratis).
-precio_unitario_neto = Subtotal_línea_real ÷ (UND_línea1 + UND_línea2)
-Ejemplo: Schneider X473, UND1=17 subtotal=24011.40 / UND2=7 DTO=99.99% → 24011.40÷(17+7) = 1000.47
+Segunda línea = unidades BONIFICADAS. precio_unitario_neto = Subtotal_real ÷ (UND1 + UND2)
+Ejemplo: Schneider X473, UND1=17 sub=24011.40 / UND2=7 DTO=99.99% → 24011.40÷24 = 1000.47
 
-CASO 2 — GOLOSINAS/SNACKS CON MULTIPLICADOR EN EL NOMBRE (Jumael, etc.):
-El primer número del nombre indica unidades por caja: "60X5GR"=60, "20X26GR"=20, "40X13GR"=40.
-La columna CANT suele ser 1.
+CASO 2 — GOLOSINAS/SNACKS CON MULTIPLICADOR EN NOMBRE (Jumael):
+"60X5GR"=60 unidades, "20X26GR"=20, "40X13GR"=40. CANT suele ser 1.
 precio_unitario_neto = Total ÷ CANT ÷ primer_número_del_nombre
 Ejemplo: MONEDA JACK 60X5GR, cant=1, total=19195.31 → 19195.31÷1÷60 = 319.92
 
 CASO 3 — LADIAR (columnas: CODIGO|CANTIDAD|UN/DI|DESCRIPCION|PRECIO UNIT|% BONIFIC|PRECIO BONIF|SUBTOTAL|SUBTOTAL C/IVA):
-⚠️ REGLA GENERAL: SIEMPRE dividir por la columna CANTIDAD. NUNCA por los números del nombre.
+⚠️ REGLA GENERAL: SIEMPRE dividir por columna CANTIDAD. NUNCA por números del nombre.
 precio_unitario_neto = SUBTOTAL_C_IVA ÷ CANTIDAD_columna
-Ejemplos generales:
-  "CHOCO COFLER BLOCK 24 UN x 300gr", CANTIDAD=3, subtotal_c_iva=31090.72 → 31090.72÷3 = 10363.57
-  "PIMIENTA NEGRA 4DI x 10U x 23gr", CANTIDAD=20, subtotal_c_iva=23599.40 → 23599.40÷20 = 1179.97
-  "PURE TOMATE ARCOR 12U x 520gr", CANTIDAD=12, subtotal_c_iva=10223.83 → 10223.83÷12 = 851.99
+Ejemplos: "CHOCO COFLER 24 UN x 300gr", CANT=3 → 31090.72÷3=10363.57
+          "PIMIENTA NEGRA 4DI x 10U x 23gr", CANT=20 → 23599.40÷20=1179.97
 
-⚠️ EXCEPCIÓN LADIAR — cuando CANTIDAD=1 DI para estos productos específicos:
-  GOMITAS MOGUL (cualquier variedad: Tiburón, Ositos, Sandia, Moras, Arañitas, etc.):
-    Si el nombre tiene cantidad de unidades (ej: "12DIx10UNx50GR" → 10UN, "12Dx10UNx40GR" → 10UN):
-      precio_unitario_neto = SUBTOTAL_C_IVA ÷ número_de_UN_en_el_nombre
-    Si el nombre NO tiene cantidad de unidades:
-      precio_unitario_neto = SUBTOTAL_C_IVA ÷ 12 (por defecto)
-    Ejemplos:
-      "MOGUL TIBURON 12 DI x 360gr", cant=1 DI, subtotal=5764.34 → 5764.34÷12 = 480.36
-      "GOMAS MOGUL SANDIA 1 DI x 10 UN x 50gr", cant=1 DI, subtotal=7776.15 → 7776.15÷10 = 777.62
-      "MOGUL JELLY BEAN EXTREME 12Dx10UNx50GR", cant=1 DI, subtotal=7776.15 → 7776.15÷10 = 777.62
+⚠️ EXCEPCIÓN LADIAR — cuando CANTIDAD=1 DI para estos productos:
+  GOMITAS MOGUL: si nombre tiene UN (ej: "10UNx50GR") → ÷ ese número. Si no → ÷ 12.
+    Ejemplo: "MOGUL TIBURON 12 DI x 360gr", 1DI → 5764.34÷12=480.36
+    Ejemplo: "GOMAS MOGUL SANDIA 1DI x 10UN x 50gr", 1DI → 7776.15÷10=777.62
+  CONFITE ROCKLETS: buscá el número de UN en el nombre y dividí por ese.
+    Ejemplo: "CONFITE ROCKLETS 16 UN x 40gr", 1UN → 1184.42÷16=74.03
+    Ejemplo: "CONFITES ROCKLETS 12DI x 720gr (18UN x 40gr)", 1DI → 21319.48÷18=1184.42
+  BARRITA ÁGUILA (NO Alfajor Águila ni Chocolate Águila Taza): dividí por UN del nombre.
+    Ejemplo: "BARRITA AGUILA 70% CACAO 24Dx24UNx14GR", 1DI → 21555.70÷24=898.15
+  TODO LO DEMÁS con 1DI → precio_unitario_neto = SUBTOTAL_C_IVA (precio por display entero)
+  ALFAJOR ÁGUILA con CANT=8 → regla general (÷8)
 
-  CONFITE ROCKLETS (cualquier variedad):
-    Buscá el número de UN en el nombre y dividí por ese.
-    Ejemplos:
-      "CONFITE ROCKLETS MANI C/CHOCOLATE 16 UN x 40gr", cant=1 UN, subtotal=1184.42 → 1184.42÷16 = 74.03
-      "CONFITES ROCKLETS 12 DI x 720gr (18 UN x 40gr)", cant=1 DI, subtotal=21319.48 → 21319.48÷18 = 1184.42
+CASO 4 — LA SERENÍSIMA:
+Si hay % en "OFERTA TRANSITORIA", ya está en IMPORTE. precio_unitario_neto = IMPORTE ÷ CANT
 
-  BARRITA ÁGUILA (NO confundir con Alfajor Águila ni Chocolate Águila Taza):
-    Buscá el número de UN en el nombre y dividí por ese.
-    Ejemplo:
-      "BARRITA AGUILA 70% CACAO 24Dx24UNx14GR", cant=1 DI, subtotal=21555.70 → 21555.70÷24 = 898.15
-
-  TODO LO DEMÁS con CANTIDAD=1 DI → precio_unitario_neto = SUBTOTAL_C_IVA ÷ 1 (precio por display entero)
-  ALFAJOR ÁGUILA con CANTIDAD=8 → precio_unitario_neto = SUBTOTAL_C_IVA ÷ 8 (regla general)
-
-CASO 4 — LA SERENÍSIMA (columnas: MATERIAL|DESCRIPCION|CANT|CONF|P.U.|IVA|OFERTA TRANSITORIA|IMPORTE):
-Si hay % en "OFERTA TRANSITORIA", el descuento ya está aplicado en el IMPORTE. Usá IMPORTE directamente.
-precio_unitario_neto = IMPORTE ÷ CANT
-Ejemplo: DdL Clásico 400gr, oferta=-10%, cant=6, importe=11529 → 11529÷6 = 1921.50
-
-CASO 5 — BOLETAS LOS HERMANOS / PAULINA (columnas: Codigo|Descripcion|Unidades|Kilos|Descuento|Unitario|Total):
-⚠️ CRÍTICO: Si hay valor en columna KILOS → SIEMPRE dividir por KILOS. La única excepción es el SALAMÍN.
-
+CASO 5 — LOS HERMANOS / PAULINA (columnas: Unidades|Kilos|Descuento|Unitario|Total):
+⚠️ Si hay valor en KILOS → SIEMPRE dividir por KILOS. Única excepción: SALAMÍN.
   Fiambres/embutidos/quesos/panceta/bondiola/pategras → Total ÷ KILOS
-    Barra La Paulina, kilos=14.960, total=116038.14 → 116038.14÷14.960 = 7756.56
-    Salchichón Bierzo, kilos=2.950, total=10727.79 → 10727.79÷2.950 = 3636.54
-    Pategras La Paulina, kilos=5.400, total=71829.40 → 71829.40÷5.400 = 13301.74
-    Panceta C/Cuero, kilos=1.525, total=21191.84 → 21191.84÷1.525 = 13896.29
-    Bondiola, kilos=1.100, total=19327.69 → 19327.69÷1.100 = 17570.63
-
-  SALAMÍN (única excepción, viene en tiras de 4 unidades) → Total ÷ (Unidades × 4)
-    Salamin P.Fino Bierzo, unidades=3, total=30003.30 → 30003.30÷(3×4) = 2500.28
-
-  Dulce de batata/membrillo/dulce con chocolate (cajas x5kg, sin kilos) → Total ÷ 5
-    Batata Cayfar x5kg, total=7821.70 → 7821.70÷5 = 1564.34
-    Membrillo Cayfar x5kg, total=9562.50 → 9562.50÷5 = 1912.50
-
+    Salchichón Bierzo, kilos=2.950, total=10727.79 → 10727.79÷2.950=3636.54
+    Pategras, kilos=5.400, total=71829.40 → 71829.40÷5.400=13301.74
+  SALAMÍN (única excepción, tiras de 4) → Total ÷ (Unidades × 4)
+    Salamin, unidades=3, total=30003.30 → 30003.30÷12=2500.28
+  Dulce batata/membrillo/choco (x5kg, sin kilos) → Total ÷ 5
   Queso Crema (unidades individuales) → Total ÷ Unidades_columna
-    Queso Crema L.P. 12x290g, unidades=2, total=4856.36 → 4856.36÷2 = 2428.18
 
-CASO 6 — QUEFIAM / MARFRIG y similares (columnas: COD|DESCRIPCION|CANT|PESO|PRECIO|% BONIF|IMP.NETO):
-El PRECIO es por kilo pero el IMP.NETO ya tiene el descuento aplicado y es el total del renglón.
-precio_unitario_neto = IMP.NETO ÷ CANT
-Ejemplos:
-  Salchichas ICB x6 x24, cant=24, imp.neto=19784.83 → 19784.83÷24 = 824.37
-  Paty Clásico 4x80grs, cant=24, imp.neto=114056.42 → 114056.42÷24 = 4752.35
-  Salchicha Tres Cruces 12x12, cant=12, imp.neto=21339.01 → 21339.01÷12 = 1778.25
-  Milanesa de Soja x4, cant=3, imp.neto=5470.13 → 5470.13÷3 = 1823.38
+CASO 6 — QUEFIAM / MARFRIG (columnas: COD|DESCRIPCION|CANT|PESO|PRECIO|% BONIF|IMP.NETO):
+IMP.NETO ya tiene descuento. precio_unitario_neto = IMP.NETO ÷ CANT
+Ejemplo: Salchichas ICB, cant=24, imp.neto=19784.83 → 19784.83÷24=824.37
 
-CASO 8 — FULL NORTE / NESTLÉ y similares (columnas: CODIGO|BULTO|UNID.|DESCRIPCION|UNITARIO|DESC.|SUBTOTAL):
-El SUBTOTAL ya tiene el descuento aplicado y es el total del renglón.
+CASO 7 — FULL NORTE / NESTLÉ (columnas: CODIGO|BULTO|UNID.|DESCRIPCION|UNITARIO|DESC.|SUBTOTAL):
+⚠️ CRÍTICO: La columna UNID. manda siempre. NUNCA uses el multiplicador del nombre cuando UNID. tiene número.
+  UNID. tiene NÚMERO → precio_unitario_neto = SUBTOTAL ÷ UNID. (ignorá los números del nombre)
+    Ejemplo: Dolca Suave Stick 20(30x0,045g), UNID=1 → 3096.59÷1=3096.59
+    Ejemplo: Gati Carne y Pollo 20x0.5kg, UNID=6 → 10897.14÷6=1816.19
+  UNID. tiene "/" o vacío → precio_unitario_neto = SUBTOTAL ÷ (BULTO × multiplicador_del_nombre)
+    Ejemplo: Nesquik Polvo 18X180G, BULTO=1, UNID=/ → 32768.52÷(1×18)=1820.47
 
-⚠️ CRÍTICO: La columna UNID. manda siempre. NUNCA uses el multiplicador del nombre cuando UNID. tiene un número.
-
-Cuando UNID. tiene un NÚMERO → precio_unitario_neto = SUBTOTAL ÷ UNID. (ignorá completamente los números del nombre)
-  Ejemplos:
-    Gati Carne y Pollo 20x0.5kg, UNID=6, subtotal=10897.14 → 10897.14÷6 = 1816.19  (ignorá el "20" del nombre)
-    Dolca Suave Stick 20(30x0,045g), UNID=1, subtotal=3096.59 → 3096.59÷1 = 3096.59  (ignorá el "30" del nombre)
-
-Cuando UNID. tiene "/" o está VACÍO → es un bulto, dividir por BULTO × multiplicador_del_nombre
-  El multiplicador es el primer número del nombre (ej: "18X180G" → 18)
-  precio_unitario_neto = SUBTOTAL ÷ (BULTO × multiplicador_del_nombre)
-  Ejemplo:
-    Nesquik Polvo 18X180G, BULTO=1, UNID=/, subtotal=32768.52 → 32768.52÷(1×18) = 1820.47
-
-CASO 9 — TICKETS SIMPLES / REMEDIOS (formato: CANT | Producto | Precio_unitario | Total):
-El precio unitario ya está en la boleta. Usalo directamente.
-precio_unitario_neto = Precio_unitario (columna del medio, no el total)
-Ignorá líneas con precio $0,00 (son nombres de local o referencias).
+CASO 8 — TICKETS SIMPLES / REMEDIOS (formato: CANT|Producto|Precio_unitario|Total):
+El precio unitario ya está en la boleta. precio_unitario_neto = Precio_unitario (columna del medio).
+Ignorá líneas con precio $0,00.
 Ejemplo: "2 Actron 600 6.760,00 13.520,00" → precio_unitario_neto = 6760.00
 
 ═══════════════════════════════════════════
 IGNORAR SIEMPRE
 ═══════════════════════════════════════════
-- Servicios Administrativos, Flete, Percepción IVA, Percepción IIBB
-- Líneas con DTO 99.99% (ya las sumaste a las reales)
-- Subtotales, totales generales, encabezados de grupo
-- Líneas con precio $0,00 (referencias, nombres de local)
+Servicios Administrativos, Flete, Percepción IVA/IIBB, Subtotales, totales generales,
+líneas con DTO 99.99%, líneas con precio $0,00, encabezados de grupo.
 
 ═══════════════════════════════════════════
 NOMBRES
 ═══════════════════════════════════════════
-Limpiá los nombres para que sean legibles:
+Limpiá los nombres para que sean legibles. Quitá códigos, abreviaturas innecesarias.
 "COCA-COLA ZERO RP 2L X9" → "Coca Zero RP 2L x9"
-"RP2LX9 COMB CCSO+CCZERO+SP+FN" → "Combo Coca RP 2L x9"
 "ESPECIAS PIMIENTA NEGRA MOLIDA LC 4DI x10U x23" → "Pimienta Negra Molida 23gr"
-"BARRA LA PAULINA" → "Barra La Paulina ($/kg)"
-"SALCHICHON BIERZO PRIMAVERA" → "Salchichón Bierzo (x unidad)"
-"tafi.1G" → "Tafi 1G"
 
 ═══════════════════════════════════════════
-RESPUESTA
+RESPUESTA: ÚNICAMENTE JSON válido. Sin texto, sin markdown.
 ═══════════════════════════════════════════
-ÚNICAMENTE JSON válido. Sin texto, sin markdown.
-
-{
-  "productos": [
-    {
-      "nombre": "Nombre limpio",
-      "precio_unitario_neto": 1234.56,
-      "descuento_detalle": ""
-    }
-  ]
-}
-
-"precio_unitario_neto" redondeado a 2 decimales.
-"descuento_detalle" solo si hubo descuento, sino "".`;
+{"productos":[{"nombre":"Nombre limpio","precio_unitario_neto":1234.56,"descuento_detalle":""}]}`;
 
 // ══════════════════════════════════════════════════
-// ANALYZE (foto)
+// ANALYZE
 // ══════════════════════════════════════════════════
 async function analyzeInvoice() {
   clearError();
@@ -701,64 +769,49 @@ async function analyzeInvoice() {
   document.getElementById('btn-analyze').disabled = true;
   document.getElementById('results-section').classList.add('hidden');
 
+  const instrucciones = document.getElementById('instrucciones')?.value.trim();
+  const promptFinal = instrucciones
+    ? `${PROMPT}\n\n═══════════════════════════════════════════\nINSTRUCCIONES ESPECÍFICAS (tienen prioridad):\n═══════════════════════════════════════════\n${instrucciones}`
+    : PROMPT;
+
   try {
     const res = await fetch('/.netlify/functions/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: imageBase64, mediaType: 'image/jpeg', prompt: PROMPT })
+      body: JSON.stringify({ image: imageBase64, mediaType: 'image/jpeg', prompt: promptFinal })
     });
-
-    if (!res.ok) {
-      const e = await res.json().catch(() => ({}));
-      throw new Error(e.error || `Error del servidor (${res.status})`);
-    }
-
+    if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error||`Error ${res.status}`); }
     const data = await res.json();
     let parsed;
-    try {
-      const clean = data.result.replace(/```json|```/gi, '').trim();
-      parsed = JSON.parse(clean);
-    } catch {
-      throw new Error('Claude no pudo leer la boleta. Intentá con una foto más nítida y bien encuadrada.');
-    }
-
+    try { parsed = JSON.parse(data.result.replace(/```json|```/gi,'').trim()); }
+    catch { throw new Error('Claude no pudo leer la boleta. Intentá con una foto más nítida.'); }
     if (!parsed.productos?.length) throw new Error('No se detectaron productos. Asegurate que la foto sea clara.');
 
-    products = parsed.productos.map((p, i) => ({
-      id: i,
-      nombre: p.nombre || `Producto ${i+1}`,
-      precio_unitario_neto: parseFloat(p.precio_unitario_neto) || 0,
-      descuento_detalle: p.descuento_detalle || '',
-      divisor: 1,
-      editing: false
+    products = parsed.productos.map((p,i) => ({
+      id: i, nombre: p.nombre||`Producto ${i+1}`,
+      precio_unitario_neto: parseFloat(p.precio_unitario_neto)||0,
+      descuento_detalle: p.descuento_detalle||'', divisor: 1, editing: false
     }));
-
     renderProducts();
     document.getElementById('results-section').classList.remove('hidden');
     document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  } catch (err) {
-    showError('⚠️ ' + err.message);
-  } finally {
-    document.getElementById('loading').classList.add('hidden');
-    checkReady();
-  }
+    saveToHistorial();
+  } catch(err) { showError('⚠️ ' + err.message); }
+  finally { document.getElementById('loading').classList.add('hidden'); checkReady(); }
 }
 
 // ══════════════════════════════════════════════════
-// RENDER
+// RENDER PRODUCTS
 // ══════════════════════════════════════════════════
 function renderProducts() {
   const list = document.getElementById('product-list');
-  document.getElementById('results-count').textContent = `${products.length} producto${products.length !== 1 ? 's' : ''}`;
+  document.getElementById('results-count').textContent = `${products.length} producto${products.length!==1?'s':''}`;
   list.innerHTML = '';
-
   products.forEach((p, idx) => {
     const finalPrice = calcFinalPrice(p.precio_unitario_neto, p.divisor);
     const div = document.createElement('div');
     div.className = 'p-item';
-    div.style.animationDelay = `${idx * 35}ms`;
-
+    div.style.animationDelay = `${idx*35}ms`;
     if (p.editing) {
       div.innerHTML = `
         <div class="p-info" style="flex:1">
@@ -766,71 +819,157 @@ function renderProducts() {
           <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Precio unitario neto</div>
           <input class="p-price-edit" id="ep-${p.id}" type="number" value="${p.precio_unitario_neto}" inputmode="decimal" style="width:100%">
         </div>
-        <div class="p-actions">
-          <button class="btn-sm save" onclick="saveEdit(${p.id})">✓</button>
-        </div>`;
+        <div class="p-actions"><button class="btn-sm save" onclick="saveEdit(${p.id})">✓</button></div>`;
     } else {
       div.innerHTML = `
         <div class="p-info">
           <div class="p-name">${esc(p.nombre)}</div>
-          ${p.descuento_detalle ? `<div class="p-discount">🏷 ${esc(p.descuento_detalle)}</div>` : ''}
+          ${p.descuento_detalle?`<div class="p-discount">🏷 ${esc(p.descuento_detalle)}</div>`:''}
           <div class="p-base">Neto: ${fmt(p.precio_unitario_neto)}</div>
-          ${p.divisor > 1 ? `<div class="p-div-badge">÷${p.divisor} unidades</div>` : ''}
+          ${p.divisor>1?`<div class="p-div-badge">÷${p.divisor} unidades</div>`:''}
         </div>
         <div class="p-price-col">
           <div class="p-price">${fmt(finalPrice)}</div>
           <div class="p-unit">por unidad</div>
         </div>
         <div class="p-actions">
-          <button class="btn-sm edit" onclick="startEdit(${p.id})" title="Editar">✏️</button>
-          <button class="btn-sm div"  onclick="showDiv(${p.id})" title="Dividir">÷</button>
-          <button class="btn-sm del"  onclick="delProduct(${p.id})" title="Eliminar">🗑</button>
+          <button class="btn-sm edit" onclick="startEdit(${p.id})">✏️</button>
+          <button class="btn-sm div" onclick="showDiv(${p.id})">÷</button>
+          <button class="btn-sm del" onclick="delProduct(${p.id})">🗑</button>
         </div>`;
     }
     list.appendChild(div);
   });
 }
 
-function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
 function startEdit(id) {
-  products = products.map(p => ({ ...p, editing: p.id === id }));
+  products = products.map(p => ({...p, editing: p.id===id}));
   renderProducts();
   setTimeout(() => document.getElementById(`en-${id}`)?.focus(), 60);
 }
 
 function saveEdit(id) {
   const newName = document.getElementById(`en-${id}`)?.value.trim();
-  const newNeto = parseFloat(document.getElementById(`ep-${id}`)?.value) || 0;
-  products = products.map(p => p.id !== id ? p : { ...p, nombre: newName || p.nombre, precio_unitario_neto: newNeto, editing: false });
+  const newNeto = parseFloat(document.getElementById(`ep-${id}`)?.value)||0;
+  products = products.map(p => p.id!==id ? p : {...p, nombre: newName||p.nombre, precio_unitario_neto: newNeto, editing: false});
   renderProducts();
 }
 
 function delProduct(id) {
-  products = products.filter(p => p.id !== id);
+  products = products.filter(p => p.id!==id);
   renderProducts();
   if (!products.length) document.getElementById('results-section').classList.add('hidden');
 }
 
 // ══════════════════════════════════════════════════
-// DIVIDIR PRECIO
+// DIVIDIR
 // ══════════════════════════════════════════════════
 function showDiv(id) {
   divTargetId = id;
-  const p = products.find(p => p.id === id);
-  document.getElementById('div-input').value = p.divisor > 1 ? p.divisor : '';
+  const p = products.find(p => p.id===id);
+  document.getElementById('div-input').value = p.divisor>1 ? p.divisor : '';
   document.getElementById('modal-div').classList.remove('hidden');
   setTimeout(() => document.getElementById('div-input').focus(), 120);
 }
 
 function confirmDiv() {
-  const val = parseInt(document.getElementById('div-input').value) || 1;
-  products = products.map(p => p.id !== divTargetId ? p : { ...p, divisor: val });
+  const val = parseInt(document.getElementById('div-input').value)||1;
+  products = products.map(p => p.id!==divTargetId ? p : {...p, divisor: val});
   hideModal('modal-div');
   renderProducts();
 }
+document.getElementById('div-input').addEventListener('keydown', e => { if(e.key==='Enter') confirmDiv(); });
 
-document.getElementById('div-input').addEventListener('keydown', e => { if (e.key === 'Enter') confirmDiv(); });
+// ══════════════════════════════════════════════════
+// HISTORIAL
+// ══════════════════════════════════════════════════
+function saveToHistorial() {
+  if (!products.length) return;
+  const provider = document.getElementById('provider-select').value || 'Sin proveedor';
+  const key = `historial_${currentLocal}`;
+  const raw = localStorage.getItem(key);
+  const hist = raw ? JSON.parse(raw) : [];
+  hist.unshift({
+    id: Date.now(),
+    proveedor: provider,
+    fecha: new Date().toLocaleDateString('es-AR', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'}),
+    productos: products.map(p => ({...p, editing: false}))
+  });
+  if (hist.length > 10) hist.pop();
+  localStorage.setItem(key, JSON.stringify(hist));
+}
+
+function showHistorial() {
+  histLocal = currentLocal;
+  renderHistorial();
+  document.getElementById('modal-historial').classList.remove('hidden');
+}
+
+function setHistLocal(local) {
+  histLocal = local;
+  document.getElementById('hist-tab-espana').classList.toggle('active', local==='espana');
+  document.getElementById('hist-tab-gelly').classList.toggle('active', local==='gelly');
+  renderHistorial();
+}
+
+function renderHistorial() {
+  const key = `historial_${histLocal}`;
+  const raw = localStorage.getItem(key);
+  const hist = raw ? JSON.parse(raw) : [];
+  const container = document.getElementById('historial-list');
+  container.innerHTML = '';
+  if (!hist.length) {
+    container.innerHTML = '<div class="historial-empty">No hay boletas guardadas</div>';
+    return;
+  }
+  hist.forEach(entry => {
+    const div = document.createElement('div');
+    div.className = 'historial-item';
+    div.innerHTML = `
+      <div class="historial-info">
+        <div class="historial-proveedor">${esc(entry.proveedor)}</div>
+        <div class="historial-meta">${entry.fecha} · ${entry.productos.length} productos</div>
+      </div>
+      <div class="historial-arrow">›</div>`;
+    div.onclick = () => showHistDetail(entry);
+    container.appendChild(div);
+  });
+}
+
+function showHistDetail(entry) {
+  currentHistEntry = entry;
+  document.getElementById('hist-detail-title').textContent = entry.proveedor;
+  const list = document.getElementById('hist-detail-list');
+  list.innerHTML = '';
+  entry.productos.forEach((p, idx) => {
+    const finalPrice = calcFinalPrice(p.precio_unitario_neto, p.divisor||1);
+    const div = document.createElement('div');
+    div.className = 'p-item';
+    div.style.animationDelay = `${idx*25}ms`;
+    div.innerHTML = `
+      <div class="p-info">
+        <div class="p-name">${esc(p.nombre)}</div>
+        <div class="p-base">Neto: ${fmt(p.precio_unitario_neto)}</div>
+      </div>
+      <div class="p-price-col">
+        <div class="p-price">${fmt(finalPrice)}</div>
+        <div class="p-unit">por unidad</div>
+      </div>`;
+    list.appendChild(div);
+  });
+  hideModal('modal-historial');
+  document.getElementById('modal-hist-detail').classList.remove('hidden');
+}
+
+function sendHistWhatsApp() {
+  if (!currentHistEntry) return;
+  let msg = `Hola, estos son los nuevos precios de *${currentHistEntry.proveedor}*:\n\n`;
+  currentHistEntry.productos.forEach(p => {
+    msg += `• ${p.nombre}: ${fmt(calcFinalPrice(p.precio_unitario_neto, p.divisor||1))}\n`;
+  });
+  msg += `\nYa saben, si lo tenemos más caro, no bajen el precio 😉`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
 
 // ══════════════════════════════════════════════════
 // WHATSAPP
@@ -862,17 +1001,17 @@ function resetApp() {
   zone.innerHTML = `<div class="upload-icon">📷</div><div class="upload-title">Sacar o cargar foto</div><div class="upload-sub">JPG · PNG · HEIC — se optimiza automáticamente</div>`;
   zone.onclick = () => document.getElementById('file-input').click();
   document.getElementById('manual-products-list').innerHTML = '';
-  const obs = document.getElementById('observaciones');
-  if (obs) obs.value = '';
   document.getElementById('results-section').classList.add('hidden');
   document.getElementById('btn-analyze').disabled = true;
+  document.getElementById('observaciones').value = '';
+  document.getElementById('instrucciones').value = '';
   clearError();
   setMode('foto');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-document.getElementById('markup-input').addEventListener('input', () => { if (products.length) renderProducts(); });
-document.getElementById('new-provider-input').addEventListener('keydown', e => { if (e.key === 'Enter') addProvider(); });
+document.getElementById('markup-input').addEventListener('input', () => { if(products.length) renderProducts(); });
+document.getElementById('new-provider-input').addEventListener('keydown', e => { if(e.key==='Enter') addProvider(); });
 
 loadProviders();
 </script>
